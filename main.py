@@ -1,17 +1,16 @@
 import os
 import pwinput
-
-aut_usuario = "admin"
-aut_senha = "admin"
-
 # Programa para uma empresa de fast food
+
+# Autenticação de administrador
+Login=["admin","1234"]
+# Dicionário para armazenar itens e preços individuais
 itens={
     'Hambúrgueres':{'Cheeseburger': 19.90,'Frango': 14.90,'Duplo Burger': 25.90},
     'Copo':{'Refri 200ml': 4.90,'Refri 600ml': 12.90},
     'Batata':{'Pequena': 5.90, 'média': 8.90, 'grande': 11.90},
     'Sobremesa':{'Milk-shake': 15.90, 'Petit-Gateau': 10.90, 'Casquinha': 5.90}
 }
-
 # Dicionário para armazenar os combos/lanches
 cardapio = {
     "1": {'Carne':' Cheeseburger', 'Acompanhamento':' Batata frita pequena','Copo ':' 200ml','preço': 39.90},
@@ -20,10 +19,13 @@ cardapio = {
     "4": {'Carne':' Duplo Burger', 'Acompanhamento':' Batata frita grande','Copo':' 600ml','preço': 59.90}
 }
 
-# Função de autenticação
-def admin():
-    flag = 0
-    while usuario == aut_usuario:
+# Função para autenticação
+def aut():
+    os.system('clear')
+    usuario = input('''
+BEM VINDO!
+Nome: ''')
+    while usuario == Login[0]:
         os.system('clear')
         senha = pwinput.pwinput(prompt='''
 ADMINISTRADOR (Digite 99 para sair)
@@ -31,13 +33,10 @@ Senha: ''')
         if senha == "99":
             print("Obrigado por usar o programa!\n")
             break
-        elif senha == aut_senha:
-            flag = 1
-            print('''
-ADMINISTRADOR''')
-            adm() ###### TEMPORARIO
+        elif senha == Login[1]:
+            return adm()
         else:
-            while senha != aut_senha:
+            while senha not in Login[1]:
                 os.system('clear')
                 flag = 1
                 senha = pwinput.pwinput(prompt='''
@@ -47,11 +46,9 @@ Senha: ''')
                     os.system('clear')
                     print("Obrigado por usar o programa!\n")
                     break
-                elif senha == aut_senha:
+                elif senha == Login[1]:
                     os.system('clear')
-                    adm() ###### TEMPORARIO
-        if flag == 1:
-            break
+                    return adm()
 
     else:
         os.system('clear')
@@ -68,9 +65,9 @@ ADMINISTRADOR
 1. Mostrar cardápio atual
 2. Alterar um combo
 3. Alterar preço
-4. Alterar usuário ADMINISTRADOR
-5. Alterar senha ADMINISTRADOR
-6. Sair
+4. Alterar usuário administrador
+5. Alterar senha administrador
+6. Voltar para tela de autenticação (sair)
 
 ''')
         opcao=input("ESCOLHA UMA OPÇÃO: ")
@@ -85,24 +82,37 @@ ADMINISTRADOR
             os.system('clear')
             
             usuario_teste=input("Digite o usuário administrador atual: ")
-            while usuario_teste != aut_usuario:
+            while usuario_teste not in Login[0]:
                 print("\nUsuário administrador incorreto, tente novamente (digite 99 para cancelar).")
                 usuario_teste=input("\nDigite o usuário administrador atual: ")
-                if usuario_aut == "99":
+                if usuario_teste == "99":
                     os.system('clear')
                     break
-            if usuario_teste == aut_usuario:
+            if usuario_teste == Login[0]:
                 usuario_novo = input("Digite o novo usuário administrador: ")
-                aut_usuario = usuario_novo
+                Login[0] = usuario_novo
                 input("\nSalvo com sucesso! Pressione enter para continuar")
                 return adm()
                 
         elif opcao == "5":
-            print()
-        elif opcao == "6":
             os.system('clear')
-            print("\nObrigado por usar o programa!\n")
-            break
+            senha_teste = input("Digite a senha atual: ")
+            while senha_teste not in Login[1]:
+                os.system('clear')
+                print("\nSenha incorreta, tente novamente. (digite 99 para sair).\n")
+                senha_teste = input("Digite a senha atual: ")
+                if senha_teste == "99":
+                    return aut()
+            if senha_teste in Login[1]:
+                os.system('clear')
+                nova_senha = input("Digite a nova senha: ")
+                Login[1] = nova_senha
+                input("\nSalvo com sucesso! Pressione enter para continuar")
+                return aut()
+                
+        elif opcao == "6":
+            aut()
+            return()
         else:
             os.system('clear')
             print("\nOpção inválida, tente novamente.")
@@ -175,10 +185,6 @@ digite o número do que gostaria de fazer agora:
             print("Opção inválida. Tente novamente.\n")
 
 # Executar o programa
-os.system('clear')
-usuario = input('''
-BEM VINDO!
-Nome: ''')
-admin()
+aut()
 
     
