@@ -1,6 +1,9 @@
 import os
 import pwinput
 
+aut_usuario = "admin"
+aut_senha = "admin"
+
 # Programa para uma empresa de fast food
 itens={
     'Hambúrgueres':{'Cheeseburger': 19.90,'Frango': 14.90,'Duplo Burger': 25.90},
@@ -11,15 +14,16 @@ itens={
 
 # Dicionário para armazenar os combos/lanches
 cardapio = {
-    1: {'Carne':' Cheeseburger', 'Acompanhamento':' Batata frita pequena','Copo ':' 200ml','preço': 39.90},
-    2: {'Carne':' Frango', 'Acompanhamento':' Batata frita média','Copo':' 200ml','preço': 36.90},
-    3: {'Carne':' Duplo Burger', 'Acompanhamento':' Batata frita média','Copo':' 200ml','preço': 49.90},
-    4: {'Carne':' Duplo Burger', 'Acompanhamento':' Batata frita grande','Copo':' 600ml','preço': 59.90}
+    "1": {'Carne':' Cheeseburger', 'Acompanhamento':' Batata frita pequena','Copo ':' 200ml','preço': 39.90},
+    "2": {'Carne':' Frango', 'Acompanhamento':' Batata frita média','Copo':' 200ml','preço': 36.90},
+    "3": {'Carne':' Duplo Burger', 'Acompanhamento':' Batata frita média','Copo':' 200ml','preço': 49.90},
+    "4": {'Carne':' Duplo Burger', 'Acompanhamento':' Batata frita grande','Copo':' 600ml','preço': 59.90}
 }
 
 # Função de autenticação
 def admin():
-    while usuario == "admin":
+    flag = 0
+    while usuario == aut_usuario:
         os.system('clear')
         senha = pwinput.pwinput(prompt='''
 ADMINISTRADOR (Digite 99 para sair)
@@ -27,14 +31,15 @@ Senha: ''')
         if senha == "99":
             print("Obrigado por usar o programa!\n")
             break
-        elif senha == "admin":
+        elif senha == aut_senha:
+            flag = 1
             print('''
 ADMINISTRADOR''')
-            main() ###### TEMPORARIO
+            adm() ###### TEMPORARIO
         else:
-            while senha != "admin":
+            while senha != aut_senha:
                 os.system('clear')
-                flag = True
+                flag = 1
                 senha = pwinput.pwinput(prompt='''
 SENHA INCORRETA (digite 99 para sair)
 Senha: ''')
@@ -42,18 +47,65 @@ Senha: ''')
                     os.system('clear')
                     print("Obrigado por usar o programa!\n")
                     break
-                elif senha == "admin":
+                elif senha == aut_senha:
                     os.system('clear')
-                    print('''
-ADMINISTRADOR''')
-                    main() ###### TEMPORARIO
-        if flag == True:
+                    adm() ###### TEMPORARIO
+        if flag == 1:
             break
 
     else:
         os.system('clear')
         print(f'{usuario},')
         main()
+
+# Função para tela de ADMINISTRADOR
+def adm():
+    os.system('clear')
+    while True:
+        print('''
+ADMINISTRADOR
+
+1. Mostrar cardápio atual
+2. Alterar um combo
+3. Alterar preço
+4. Alterar usuário ADMINISTRADOR
+5. Alterar senha ADMINISTRADOR
+6. Sair
+
+''')
+        opcao=input("ESCOLHA UMA OPÇÃO: ")
+        if opcao == "1":
+            os.system('clear')
+            mostrar_cardapio()
+        elif opcao == "2":
+            print()
+        elif opcao == "3":
+            print()
+        elif opcao == "4":
+            os.system('clear')
+            
+            usuario_teste=input("Digite o usuário administrador atual: ")
+            while usuario_teste != aut_usuario:
+                print("\nUsuário administrador incorreto, tente novamente (digite 99 para cancelar).")
+                usuario_teste=input("\nDigite o usuário administrador atual: ")
+                if usuario_aut == "99":
+                    os.system('clear')
+                    break
+            if usuario_teste == aut_usuario:
+                usuario_novo = input("Digite o novo usuário administrador: ")
+                aut_usuario = usuario_novo
+                input("\nSalvo com sucesso! Pressione enter para continuar")
+                return adm()
+                
+        elif opcao == "5":
+            print()
+        elif opcao == "6":
+            os.system('clear')
+            print("\nObrigado por usar o programa!\n")
+            break
+        else:
+            os.system('clear')
+            print("\nOpção inválida, tente novamente.")
 
 # Função para mostrar o cardápio inteiro
 def mostrar_cardapio():
@@ -91,12 +143,16 @@ def montar_pedido():
 # Função principal
 def main():
     while True:
-        print("digite o número do que gostaria de fazer agora:")
-        print("\n1. Mostrar cardápio")
-        print("2. Pedir um combo")
-        print("3. Montar seu próprio pedido")
-        print("4. Ver carrinho")
-        print("5. Sair\n")
+        print('''
+digite o número do que gostaria de fazer agora:
+
+1. Mostrar cardápio
+2. Pedir um combo
+3. Montar seu próprio pedido
+4. Ver carrinho
+5. Sair
+
+''')
         opcao = input("Escolha uma opção: ")
 
         if opcao == '1':
