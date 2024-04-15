@@ -35,21 +35,17 @@ Nome: ''')
 ADMINISTRADOR (Digite 99 para sair)
 Senha: ''')
         if senha == "99":
-            print("Obrigado por usar o programa!\n")
-            break
+            return aut()
         elif senha == Login[1]:
             return adm()
         else:
             while senha not in Login[1]:
-                os.system('cls')
-                flag = 1
+                os.system('clear')
                 senha = pwinput.pwinput(prompt='''
 SENHA INCORRETA (digite 99 para sair)
 Senha: ''')
                 if senha == "99":
-                    os.system('cls')
-                    print("Obrigado por usar o programa!\n")
-                    break
+                    return aut()
                 elif senha == Login[1]:
                     os.system('cls')
                     return adm()
@@ -127,7 +123,7 @@ def mostrar_cardapio():
         CARDÁPIO
 ''')
     for combo, itens in cardapio.items():
-        print(f"{combo}:")
+        print(f"[{combo}]:")
         for chave, valor in itens.items():
             print(f" {chave}:{valor}")
         print()
