@@ -24,13 +24,13 @@ carrinho = []
 
 # Função para autenticação
 def aut():
-    os.system('cls')
+    limpar_tela()
     usuario = input('''
 BEM VINDO!
 Faça o seu login!
 Nome: ''')
     while usuario == Login[0]:
-        os.system('cls')
+        limpar_tela()
         senha = pwinput.pwinput(prompt='''
 ADMINISTRADOR (Digite 99 para sair)
 Senha: ''')
@@ -47,17 +47,17 @@ Senha: ''')
                 if senha == "99":
                     return aut()
                 elif senha == Login[1]:
-                    os.system('cls')
+                    limpar_tela()
                     return adm()
 
     else:
-        os.system('cls')
+        limpar_tela()
         print(f'Olá! {usuario}')
         main()
 
 # Função para tela de ADMINISTRADOR
 def adm():
-    os.system('cls')
+    limpar_tela()
     while True:
         print('''
 ADMINISTRADOR
@@ -72,21 +72,21 @@ ADMINISTRADOR
 ''')
         opcao=input("ESCOLHA UMA OPÇÃO: ")
         if opcao == "1":
-            os.system('cls')
+            limpar_tela()
             mostrar_cardapio()
         elif opcao == "2":
             print()
         elif opcao == "3":
             print()
         elif opcao == "4":
-            os.system('cls')
+            limpar_tela()
             
             usuario_teste=input("Digite o usuário administrador atual: ")
             while usuario_teste not in Login[0]:
                 print("\nUsuário administrador incorreto, tente novamente (digite 99 para cancelar).")
                 usuario_teste=input("\nDigite o usuário administrador atual: ")
                 if usuario_teste == "99":
-                    os.system('cls')
+                    limpar_tela()
                     break
             if usuario_teste == Login[0]:
                 usuario_novo = input("Digite o novo usuário administrador: ")
@@ -95,16 +95,16 @@ ADMINISTRADOR
                 return adm()
                 
         elif opcao == "5":
-            os.system('cls')
+            limpar_tela()
             senha_teste = input("Digite a senha atual: ")
             while senha_teste not in Login[1]:
-                os.system('cls')
+                limpar_tela()
                 print("\nSenha incorreta, tente novamente. (digite 99 para sair).\n")
                 senha_teste = input("Digite a senha atual: ")
                 if senha_teste == "99":
                     return aut()
             if senha_teste in Login[1]:
-                os.system('cls')
+                limpar_tela()
                 nova_senha = input("Digite a nova senha: ")
                 Login[1] = nova_senha
                 input("\nSalvo com sucesso! Pressione enter para continuar")
@@ -114,11 +114,12 @@ ADMINISTRADOR
             aut()
             return()
         else:
-            os.system('cls')
+            limpar_tela()
             print("\nOpção inválida, tente novamente.")
 
 # Função para mostrar o cardápio inteiro
 def mostrar_cardapio():
+    limpar_tela()
     print('''
         CARDÁPIO
 ''')
@@ -131,6 +132,7 @@ def mostrar_cardapio():
 
 # Função para pedir um combo do cardápio
 def pedir_combo():
+    limpar_tela()
     mostrar_cardapio()
     escolha = input("Escolha um combo (ex: 1): ")
     if escolha in cardapio:
@@ -141,7 +143,7 @@ def pedir_combo():
 
 # Função para montar um pedido personalizado
 def montar_pedido():
-    
+    limpar_tela()
     for adicional, ingrediente in itens.items():
         print(f"\n{adicional}: \n")
         for chave, valor in ingrediente.items():
@@ -161,9 +163,23 @@ def montar_pedido():
 
 # Função Ver carrinho
 def ver_carrinho():
-    os.system('cls')
+    limpar_tela()
     print('Seu carrinho')
     print(carrinho)
+
+#função limpar tela
+def limpar_tela():
+    #Comando para ver qual sistema operacional está sendo utilizado
+    sistema_operacional = os.name
+        
+    if sistema_operacional == 'posix': #Se for Unix/Linux/MacOS
+        os.system('clear')
+    elif sistema_operacional == 'nt': #Se for Windows
+        os.system('cls')
+    
+    else: #Caso não seja identificado ele vai executar os dois comandos
+        os.system('clear')
+        os.system('cls')
 
 # Função principal
 def main():
@@ -181,16 +197,16 @@ digite o número do que gostaria de fazer agora:
         opcao = input("Escolha uma opção: ")
 
         if opcao == '1':
-            os.system('cls')
+            limpar_tela()
             mostrar_cardapio()
             
         elif opcao == '2':
-            os.system('cls')
+            limpar_tela()
             pedido = pedir_combo()
             print("Pedido: ", pedido)
 
         elif opcao == '3':
-            os.system('cls')
+            limpar_tela()
             pedido = montar_pedido()
             print("Pedido completo: ", pedido)
 
@@ -198,11 +214,11 @@ digite o número do que gostaria de fazer agora:
             ver_carrinho()
 
         elif opcao == '5':
-            os.system('cls')
+            limpar_tela()
             print("\nObrigado por usar o programa!\n")
             break
         else:
-            os.system('cls')
+            limpar_tela()
             print("Opção inválida. Tente novamente.\n")
 
 # Executar o programa
