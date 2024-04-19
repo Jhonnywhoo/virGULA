@@ -3,8 +3,23 @@ import pwinput
 import locale
 # Programa para uma empresa de fast food
 
-# Autenticação de administrador
-Login=["admin","1234"]
+# Função para carregar dados do TXT
+def LoadTxt():
+    L0=[] # Lista que recebrá TXT
+    L1={} # DCT que receberá a lista
+    with open("main.txt",'r') as dados:
+        for i in dados:
+            L0.append(i.strip().split(","))
+    for i in L0: # Tranforma lista em dicionario
+        L1[i[0]]=[i[1],i[2]]
+    return L1
+
+# Função para salvar TXT
+def SaveTxt(dict):
+    with open("main.txt",'w') as dados:
+        for chave,dados in dict.items():
+            dados.write(f"{chave},{dados[0]},{dados[1]}\n")
+
 # Dicionário para armazenar itens e preços individuais
 itens={
     'Hambúrgueres':{'Cheeseburger': 19.90,'Frango': 14.90,'Duplo Burger': 25.90},
@@ -27,33 +42,35 @@ def aut():
     limpar_tela()
     usuario = input('''
 BEM VINDO!
-Faça o seu login!
 Nome: ''')
-    while usuario == Login[0]:
-        limpar_tela()
-        senha = pwinput.pwinput(prompt='''
+    Login = LoadTxt() # Carrega os dados dentro da função aut
+    for login,valores in Login.items():
+        print (f'{login}')
+        if usuario == valores[0]:
+            limpar_tela()
+            senha = pwinput.pwinput(prompt='''
 ADMINISTRADOR (Digite 99 para sair)
 Senha: ''')
-        if senha == "99":
-            return aut()
-        elif senha == Login[1]:
-            return adm()
-        else:
-            while senha not in Login[1]:
-                os.system('clear')
-                senha = pwinput.pwinput(prompt='''
+            if senha == "99":
+                return aut()
+            elif senha == Login[1]:
+                return adm()
+            else:
+                while senha not in Login[1]:
+                    limpar_tela()
+                    senha = pwinput.pwinput(prompt='''
 SENHA INCORRETA (digite 99 para sair)
 Senha: ''')
-                if senha == "99":
-                    return aut()
-                elif senha == Login[1]:
-                    limpar_tela()
-                    return adm()
+                    if senha == "99":
+                        return aut()
+                    elif senha == Login[1]:
+                        limpar_tela()
+                        return adm()
 
-    else:
-        limpar_tela()
-        print(f'Olá! {usuario}')
-        main()
+        else:
+                limpar_tela()
+                print(f'Olá, {usuario}!')
+                main()
 
 # Função para tela de ADMINISTRADOR
 def adm():
