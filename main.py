@@ -7,18 +7,18 @@ import locale
 def LoadTxt():
     L0=[] # Lista que recebrá TXT
     L1={} # DCT que receberá a lista
-    with open("main.txt",'r') as dados:
-        for i in dados:
+    with open("main.txt",'r') as Dados:
+        for i in Dados:
             L0.append(i.strip().split(","))
     for i in L0: # Tranforma lista em dicionario
         L1[i[0]]=[i[1],i[2]]
     return L1
 
 # Função para salvar TXT
-def SaveTxt(dict):
-    with open("main.txt",'w') as dados:
-        for chave,dados in dict.items():
-            dados.write(f"{chave},{dados[0]},{dados[1]}\n")
+def SaveTxt(Dict):
+    with open("main.txt", 'w+') as Dados:
+        for chave,dados in Dict.items():
+            Dados.write(f"{chave},{dados[0]},{dados[1]}\n")
 
 # Dicionário para armazenar itens e preços individuais
 itens={
@@ -47,27 +47,27 @@ Nome: ''')
     for login,valores in Login.items():
         print (f'{login}')
         if usuario == valores[0]:
-            limpar_tela()
+            print(f'{Login}')
             senha = pwinput.pwinput(prompt='''
 ADMINISTRADOR (Digite 99 para sair)
 Senha: ''')
             if senha == "99":
                 return aut()
-            elif senha == Login[1]:
+            elif senha == valores[1]:
                 return adm()
             else:
-                while senha not in Login[1]:
+                while senha not in valores[1]:
                     limpar_tela()
                     senha = pwinput.pwinput(prompt='''
 SENHA INCORRETA (digite 99 para sair)
 Senha: ''')
                     if senha == "99":
                         return aut()
-                    elif senha == Login[1]:
+                    elif senha == valores[1]:
                         limpar_tela()
                         return adm()
 
-        else:
+    else:
                 limpar_tela()
                 print(f'Olá, {usuario}!')
                 main()
@@ -97,35 +97,44 @@ ADMINISTRADOR
             print()
         elif opcao == "4":
             limpar_tela()
-            
+            Login = LoadTxt()
             usuario_teste=input("Digite o usuário administrador atual: ")
-            while usuario_teste not in Login[0]:
-                print("\nUsuário administrador incorreto, tente novamente (digite 99 para cancelar).")
-                usuario_teste=input("\nDigite o usuário administrador atual: ")
-                if usuario_teste == "99":
-                    limpar_tela()
-                    break
-            if usuario_teste == Login[0]:
-                usuario_novo = input("Digite o novo usuário administrador: ")
-                Login[0] = usuario_novo
-                input("\nSalvo com sucesso! Pressione enter para continuar")
-                return adm()
+            for login,dados in Login.items():
+                while usuario_teste not in dados[0]:
+                    print("\nUsuário administrador incorreto, tente novamente (digite 99 para cancelar).")
+                    usuario_teste=input("\nDigite o usuário administrador atual: ")
+                    if usuario_teste == "99":
+                        return adm()
+                if usuario_teste == dados[0]:
+                    usuario_novo = input("Digite o novo usuário administrador: ")
+                    L1 = SaveTxt
+                    L2 = {
+                        login:[usuario_novo,dados[1]]
+                    }
+                    SaveTxt(L2)
+                    input("\nSalvo com sucesso! Pressione enter para continuar")
+                    return adm()
                 
         elif opcao == "5":
             limpar_tela()
+            Login = LoadTxt()
             senha_teste = input("Digite a senha atual: ")
-            while senha_teste not in Login[1]:
-                limpar_tela()
-                print("\nSenha incorreta, tente novamente. (digite 99 para sair).\n")
-                senha_teste = input("Digite a senha atual: ")
-                if senha_teste == "99":
+            for login,dados in Login.items():
+                while senha_teste not in dados[1]:
+                    limpar_tela()
+                    print("Senha incorreta, tente novamente. (digite 99 para sair).\n")
+                    senha_teste = input("Digite a senha atual: ")
+                    if senha_teste == "99":
+                        return aut()
+                if senha_teste in dados[1]:
+                    limpar_tela()
+                    nova_senha = input("Digite a nova senha: ")
+                    L2 = {
+                        "login":[dados[0],nova_senha]
+                    }
+                    SaveTxt(L2)
+                    input("\nSalvo com sucesso! Pressione enter para continuar")
                     return aut()
-            if senha_teste in Login[1]:
-                limpar_tela()
-                nova_senha = input("Digite a nova senha: ")
-                Login[1] = nova_senha
-                input("\nSalvo com sucesso! Pressione enter para continuar")
-                return aut()
                 
         elif opcao == "6":
             aut()
