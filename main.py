@@ -128,7 +128,7 @@ def mostrar_cardapio():
         for chave, valor in itens.items():
             print(f" {chave}:{valor}")
         print()
-    voltarmenu = input("Aperte enter para retornar ao menu: ")
+    
 
 # Função para pedir um combo do cardápio
 def pedir_combo():
@@ -136,7 +136,10 @@ def pedir_combo():
     mostrar_cardapio()
     escolha = input("Escolha um combo (ex: 1): ")
     if escolha in cardapio:
-        return {escolha: cardapio[escolha]}
+        carrinho.append({
+                "ID": {escolha: cardapio[escolha]}
+            })
+        return print("O combo foi adicionado ao carrinho")
     else:
         print("Combo não encontrado.")
         return {}
@@ -157,14 +160,17 @@ def montar_pedido():
         quantidade = int(input(f"Quantidade de {item}: "))
         carrinho.append({
             "item": item,
+            "valor": valor,
             "Quantidade": quantidade
         })
+        print("O item foi adicionado ao seu pedido")
     return carrinho
 
 # Função Ver carrinho
 def ver_carrinho():
     limpar_tela()
     print('Seu carrinho')
+    
     print(carrinho)
 
 #função limpar tela
@@ -202,8 +208,8 @@ digite o número do que gostaria de fazer agora:
             
         elif opcao == '2':
             limpar_tela()
-            pedido = pedir_combo()
-            print("Pedido: ", pedido)
+            pedir_combo()
+            
 
         elif opcao == '3':
             limpar_tela()
@@ -211,6 +217,7 @@ digite o número do que gostaria de fazer agora:
             print("Pedido completo: ", pedido)
 
         elif opcao == '4':
+            limpar_tela()
             ver_carrinho()
 
         elif opcao == '5':
