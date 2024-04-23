@@ -3,6 +3,17 @@ import pwinput
 import locale
 # Programa para uma empresa de fast food
 
+# Logo
+def Logo():
+    print('''
+         ,e,        e88~~\  888   | 888        e
+Y88b    / "  888-~\d888     888   | 888       d8b
+ Y88b  / 888 888   8888 __  888   | 888      /Y88b
+  Y88b/  888 888   8888   | 888   | 888     /  Y88b
+   Y8/   888 888   Y888   | Y88   | 888    /____Y88b
+    Y    888 888    "88__/   "8__/  888___/      Y88b
+''')
+
 # Função para carregar dados do TXT
 def LoadTxt(tipo='todos'):
     L0=[] # Lista que recebrá TXT
@@ -36,16 +47,8 @@ carrinho = []
 # Função para autenticação
 def aut():
     limpar_tela()
+    Logo()
     usuario = input('''
-   
-         ,e,        e88~~\  888   | 888        e
-Y88b    / "  888-~\d888     888   | 888       d8b
- Y88b  / 888 888   8888 __  888   | 888      /Y88b
-  Y88b/  888 888   8888   | 888   | 888     /  Y88b
-   Y8/   888 888   Y888   | Y88   | 888    /____Y88b
-    Y    888 888    "88__/   "8__/  888___/      Y88b
-
-
 BEM VINDO!
 Nome: ''')
     if usuario == "fechar":
@@ -122,6 +125,10 @@ def AltSenhaAdm():
 # Função para alterar preço de unidade do montar pedido
 def AltUnid():
     limpar_tela()
+    print('''
+ Aqui é possível alterar o nome e o preço dos itens disponíveis no menu "Montar Combo" dos clientes.
+ As alterações são salvas automaticamente no arquivo "main.txt".
+''')
     Exib = LoadTxt("[")
     for item,tipo in Exib.items():
         print(item,tipo[0])
@@ -132,13 +139,12 @@ def AltUnid():
         if opt == "99":
             adm()
             return()
-            
         if opt == "1":
             limpar_tela()
             print(f'Lanche:\n')
             print('[1]',tipo[0])
             print('[2]',tipo[1])
-            alteracao = input('Digite o número do que gostaria de alterar (Digite 99 para cancelar): ')
+            alteracao = input('\nDigite o número do que gostaria de alterar (Digite 99 para cancelar): ')
             if alteracao == "99":
                 return AltUnid()
             elif alteracao == "1":
@@ -167,7 +173,7 @@ Digite 99 para cancelar: ''')
             print(f'Lanche:\n')
             print('[1]',tipo[0])
             print('[2]',tipo[1])
-            alteracao = input('Digite o número do que gostaria de alterar (Digite 99 para cancelar): ')
+            alteracao = input('\nDigite o número do que gostaria de alterar (Digite 99 para cancelar): ')
             if alteracao == "99":
                 return AltUnid()
             elif alteracao == "1":
@@ -194,7 +200,7 @@ Digite 99 para cancelar: ''')
             print(f'Lanche:\n')
             print('[1]',tipo[0])
             print('[2]',tipo[1])
-            alteracao = input('Digite o número do que gostaria de alterar (Digite 99 para cancelar): ')
+            alteracao = input('\nDigite o número do que gostaria de alterar (Digite 99 para cancelar): ')
             if alteracao == "99":
                 return AltUnid()
             elif alteracao == "1":
@@ -221,7 +227,7 @@ Digite 99 para cancelar: ''')
             print(f'Copo de Refrigerante:\n')
             print('[1]',tipo[0])
             print('[2]',tipo[1])
-            alteracao = input('Digite o número do que gostaria de alterar (Digite 99 para cancelar): ')
+            alteracao = input('\nDigite o número do que gostaria de alterar (Digite 99 para cancelar): ')
             if alteracao == "99":
                 return AltUnid()
             elif alteracao == "1":
@@ -248,7 +254,7 @@ Digite 99 para cancelar: ''')
             print(f'Copo de Refrigerante:\n')
             print('[1]',tipo[0])
             print('[2]',tipo[1])
-            alteracao = input('Digite o número do que gostaria de alterar (Digite 99 para cancelar): ')
+            alteracao = input('\nDigite o número do que gostaria de alterar (Digite 99 para cancelar): ')
             if alteracao == "99":
                 return AltUnid()
             elif alteracao == "1":
@@ -275,7 +281,7 @@ Digite 99 para cancelar: ''')
             print(f'Garrafa de Refrigerante:\n')
             print('[1]',tipo[0])
             print('[2]',tipo[1])
-            alteracao = input('Digite o número do que gostaria de alterar (Digite 99 para cancelar): ')
+            alteracao = input('\nDigite o número do que gostaria de alterar (Digite 99 para cancelar): ')
             if alteracao == "99":
                 return AltUnid()
             elif alteracao == "1":
@@ -302,7 +308,7 @@ Digite 99 para cancelar: ''')
             print(f'Batata:\n')
             print('[1]',tipo[0])
             print('[2]',tipo[1])
-            alteracao = input('Digite o número do que gostaria de alterar (Digite 99 para cancelar): ')
+            alteracao = input('\nDigite o número do que gostaria de alterar (Digite 99 para cancelar): ')
             if alteracao == "99":
                return AltUnid() 
             elif alteracao == "1":
@@ -329,7 +335,7 @@ Digite 99 para cancelar: ''')
             print(f'Batata:\n')
             print('[1]',tipo[0])
             print('[2]',tipo[1])
-            alteracao = input('Digite o número do que gostaria de alterar (Digite 99 para cancelar): ')
+            alteracao = input('\nDigite o número do que gostaria de alterar (Digite 99 para cancelar): ')
             if alteracao == "99":
                 return AltUnid()
             elif alteracao == "1":
@@ -356,7 +362,7 @@ Digite 99 para cancelar: ''')
             print(f'Batata:\n')
             print('[1]',tipo[0])
             print('[2]',tipo[1])
-            alteracao = input('Digite o número do que gostaria de alterar (Digite 99 para cancelar): ')
+            alteracao = input('\nDigite o número do que gostaria de alterar (Digite 99 para cancelar): ')
             if alteracao == "99":
                 return AltUnid()
             elif alteracao == "1":
@@ -383,7 +389,7 @@ Digite 99 para cancelar: ''')
             print(f'Sobremesa:\n')
             print('[1]',tipo[0])
             print('[2]',tipo[1])
-            alteracao = input('Digite o número do que gostaria de alterar (Digite 99 para cancelar): ')
+            alteracao = input('\nDigite o número do que gostaria de alterar (Digite 99 para cancelar): ')
             if alteracao == "99":
                 return AltUnid()
             elif alteracao == "1":
@@ -410,7 +416,7 @@ Digite 99 para cancelar: ''')
             print(f'Sobremesa:\n')
             print('[1]',tipo[0])
             print('[2]',tipo[1])
-            alteracao = input('Digite o número do que gostaria de alterar (Digite 99 para cancelar): ')
+            alteracao = input('\nDigite o número do que gostaria de alterar (Digite 99 para cancelar): ')
             if alteracao == "99":
                 return AltUnid()
             elif alteracao == "1":
@@ -437,7 +443,7 @@ Digite 99 para cancelar: ''')
             print(f'Sobremesa:\n')
             print('[1]',tipo[0])
             print('[2]',tipo[1])
-            alteracao = input('Digite o número do que gostaria de alterar (Digite 99 para cancelar): ')
+            alteracao = input('\nDigite o número do que gostaria de alterar (Digite 99 para cancelar): ')
             if alteracao == "99":
                 return AltUnid()
             elif alteracao == "1":
@@ -464,28 +470,26 @@ Digite 99 para cancelar: ''')
 def adm():
     limpar_tela()
     while True:
+        Logo()
         print('''
-   
-         ,e,        e88~~\  888   | 888        e
-Y88b    / "  888-~\d888     888   | 888       d8b
- Y88b  / 888 888   8888 __  888   | 888      /Y88b
-  Y88b/  888 888   8888   | 888   | 888     /  Y88b
-   Y8/   888 888   Y888   | Y88   | 888    /____Y88b
-    Y    888 888    "88__/   "8__/  888___/      Y88b
-
-
 ADMINISTRADOR
 
-1. Mostrar cardápio de combos atual
-2. Alterar um combo (cardápio)
-3. Alterar unidade (montar combo)
-4. Alterar usuário administrador
-5. Alterar senha administrador
-6. Voltar para tela de autenticação
-7. Fechar programa
+[1] Mostrar cardápio de combos atual
+
+[2] Alterar um combo (cardápio)
+
+[3] Alterar unidade (montar combo)
+
+[4] Alterar usuário administrador
+
+[5] Alterar senha administrador
+
+[6] Voltar para tela de autenticação
+
+[7] Fechar programa
 
 ''')
-        opcao=input("ESCOLHA UMA OPÇÃO: ")
+        opcao=input("ENTRE COM O NÚMERO DE UMA DAS OPÇÕES ACIMA: ")
         if opcao == "1":
             limpar_tela()
             mostrar_cardapio()
@@ -579,14 +583,8 @@ def limpar_tela():
 # Função principal
 def main():
     while True:
+        Logo()
         print('''
-         ,e,        e88~~\  888   | 888        e
-Y88b    / "  888-~\d888     888   | 888       d8b
- Y88b  / 888 888   8888 __  888   | 888      /Y88b
-  Y88b/  888 888   8888   | 888   | 888     /  Y88b
-   Y8/   888 888   Y888   | Y88   | 888    /____Y88b
-    Y    888 888    "88__/   "8__/  888___/      Y88b
-
 Sinta-se em casa.
 Digite o número do que gostaria de fazer agora:
 
