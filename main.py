@@ -122,350 +122,52 @@ def AltSenhaAdm():
             input("\nSalvo com sucesso! Pressione enter para continuar")
             return adm()
 
-# Função para alterar preço de unidade do montar pedido
+# Funções para alterar preço de unidade do montar pedido
+def alterar_item(item, Alt):
+    limpar_tela()
+    print(f'{item}:\n')
+    print('[1]', Alt[item][0])
+    print('[2]', Alt[item][1])
+    alteracao = input('\nDigite o número do que gostaria de alterar (Digite 99 para cancelar): ')
+    if alteracao == "99":
+        return
+    elif alteracao == "1":
+        nome = input(f"\nDigite o novo nome que gostaria de registrar para {item} (Digite 99 para cancelar): ")
+        if nome == "99":
+            return AltUnid()
+        Alt[item][0] = nome
+    elif alteracao == "2":
+        preco = input('''\nDigite o novo preço que gostaria de registrar
+(sem cifrão, apenas número e ponto)
+Digite 99 para cancelar: ''')
+        if preco == "99":
+            return AltUnid()
+        Alt[item][1] = preco
+    SaveTxt(Alt)
+    input("\nSalvo!")
+    return AltUnid()
+
 def AltUnid():
     limpar_tela()
     print('''
- Aqui é possível alterar o nome e o preço dos itens disponíveis no menu "Montar Combo" dos clientes.
- As alterações são salvas automaticamente no arquivo "main.txt".
+Aqui é possível alterar o nome e o preço dos itens disponíveis no menu "Montar Combo" dos clientes.
+As alterações são salvas automaticamente no arquivo "main.txt".
 ''')
     Exib = LoadTxt("[")
-    for item,tipo in Exib.items():
-        print(item,tipo[0])
-        print('R$',tipo[1],'\n')
+    for item, tipo in Exib.items():
+        print(item, tipo[0])
+        print('R$', tipo[1], '\n')
+
     Alt = LoadTxt()
-    opt = input(('Digite o número do item que gostaria de alterar (digite 99 para sair): '))
-    for item,tipo in Exib.items():
+    while True:
+        opt = input('Digite o número do item que gostaria de alterar (digite 99 para sair): ')
         if opt == "99":
-            adm()
-            return()
-        if opt == "1":
-            limpar_tela()
-            print(f'Lanche:\n')
-            print('[1]',tipo[0])
-            print('[2]',tipo[1])
-            alteracao = input('\nDigite o número do que gostaria de alterar (Digite 99 para cancelar): ')
-            if alteracao == "99":
-                return AltUnid()
-            elif alteracao == "1":
-                nome = input("\nDigite o novo nome que gostaria de registrar (Digite 99 para cancelar): ")
-                if nome == "99":
-                    return AltUnid()
-                Alt['[1] Lanche:']=[nome,tipo[1]]
-                SaveTxt(Alt)
-                input("\nSalvo!")
-                return AltUnid()
-            elif alteracao == "2":
-                preco = input('''\nDigite o novo preço que gostaria de registrar
-(sem cifrão, apenas número e ponto)
-Digite 99 para cancelar: ''')
-                if preco == "99":
-                    return AltUnid()
-                Alt['[1] Lanche:']=[tipo[0],preco]
-                SaveTxt(Alt)
-                input("\nSalvo!")
-                return AltUnid()
-            else:
-                input('\nUnidade não encontrada, pressione Enter para tentar novamente.')
-                
-        if opt == "2" and item == "[2] Lanche:":
-            limpar_tela()
-            print(f'Lanche:\n')
-            print('[1]',tipo[0])
-            print('[2]',tipo[1])
-            alteracao = input('\nDigite o número do que gostaria de alterar (Digite 99 para cancelar): ')
-            if alteracao == "99":
-                return AltUnid()
-            elif alteracao == "1":
-                nome = input("\nDigite o novo nome que gostaria de registrar (Digite 99 para cancelar): ")
-                if nome == "99":
-                    return AltUnid()
-                Alt['[2] Lanche:']=[nome,tipo[1]]
-                SaveTxt(Alt)
-                input("\nSalvo!")
-                return AltUnid()
-            elif alteracao == "2":
-                preco = input('''\nDigite o novo preço que gostaria de registrar
-(sem cifrão, apenas número e ponto)
-Digite 99 para cancelar: ''')
-                if preco == "99":
-                    return AltUnid()
-                Alt['[2] Lanche:']=[tipo[0],preco]
-                SaveTxt(Alt)
-                input("\nSalvo!")
-                return AltUnid()
-        
-        if opt == "3" and item == "[3] Lanche:":
-            limpar_tela()
-            print(f'Lanche:\n')
-            print('[1]',tipo[0])
-            print('[2]',tipo[1])
-            alteracao = input('\nDigite o número do que gostaria de alterar (Digite 99 para cancelar): ')
-            if alteracao == "99":
-                return AltUnid()
-            elif alteracao == "1":
-                nome = input("\nDigite o novo nome que gostaria de registrar (Digite 99 para cancelar): ")
-                if nome == "99":
-                    return AltUnid()
-                Alt['[3] Lanche:']=[nome,tipo[1]]
-                SaveTxt(Alt)
-                input("\nSalvo!")
-                return AltUnid()
-            elif alteracao == "2":
-                preco = input('''\nDigite o novo preço que gostaria de registrar
-(sem cifrão, apenas número e ponto)
-Digite 99 para cancelar: ''')
-                if preco == "99":
-                    return AltUnid()
-                Alt['[3] Lanche:']=[tipo[0],preco]
-                SaveTxt(Alt)
-                input("\nSalvo!")
-                return AltUnid()
-                
-        if opt == "4" and item == "[4] Copo de Refrigerante:":
-            limpar_tela()
-            print(f'Copo de Refrigerante:\n')
-            print('[1]',tipo[0])
-            print('[2]',tipo[1])
-            alteracao = input('\nDigite o número do que gostaria de alterar (Digite 99 para cancelar): ')
-            if alteracao == "99":
-                return AltUnid()
-            elif alteracao == "1":
-                nome = input("\nDigite o novo nome que gostaria de registrar (Digite 99 para cancelar): ")
-                if nome == "99":
-                    return AltUnid()
-                Alt['[4] Copo de Refrigerante:']=[nome,tipo[1]]
-                SaveTxt(Alt)
-                input("\nSalvo!")
-                return AltUnid()
-            elif alteracao == "2":
-                preco = input('''\nDigite o novo preço que gostaria de registrar
-(sem cifrão, apenas número e ponto)
-Digite 99 para cancelar: ''')
-                if preco == "99":
-                    return AltUnid()
-                Alt['[4] Copo de Refrigerante:']=[tipo[0],preco]
-                SaveTxt(Alt)
-                input("\nSalvo!")
-                return AltUnid()
-                
-        if opt == "5" and item == "[5] Copo de Refrigerante:":
-            limpar_tela()
-            print(f'Copo de Refrigerante:\n')
-            print('[1]',tipo[0])
-            print('[2]',tipo[1])
-            alteracao = input('\nDigite o número do que gostaria de alterar (Digite 99 para cancelar): ')
-            if alteracao == "99":
-                return AltUnid()
-            elif alteracao == "1":
-                nome = input("\nDigite o novo nome que gostaria de registrar (Digite 99 para cancelar): ")
-                if nome == "99":
-                    return AltUnid()
-                Alt['[5] Copo de Refrigerante:']=[nome,tipo[1]]
-                SaveTxt(Alt)
-                input("\nSalvo!")
-                return AltUnid()
-            elif alteracao == "2":
-                preco = input('''\nDigite o novo preço que gostaria de registrar
-(sem cifrão, apenas número e ponto)
-Digite 99 para cancelar: ''')
-                if preco == "99":
-                    return AltUnid()
-                Alt['[5] Copo de Refrigerante:']=[tipo[0],preco]
-                SaveTxt(Alt)
-                input("\nSalvo!")
-                return AltUnid()
-        
-        if opt == "6" and item == "[6] Garrafa de Refrigerante:":
-            limpar_tela()
-            print(f'Garrafa de Refrigerante:\n')
-            print('[1]',tipo[0])
-            print('[2]',tipo[1])
-            alteracao = input('\nDigite o número do que gostaria de alterar (Digite 99 para cancelar): ')
-            if alteracao == "99":
-                return AltUnid()
-            elif alteracao == "1":
-                nome = input("\nDigite o novo nome que gostaria de registrar(Digite 99 para cancelar): ")
-                if nome == "99":
-                    return AltUnid()
-                Alt['[6] Garrafa de Refrigerante:']=[nome,tipo[1]]
-                SaveTxt(Alt)
-                input("\nSalvo!")
-                return AltUnid()
-            if alteracao == "2":
-                preco = input('''\nDigite o novo preço que gostaria de registrar
-(sem cifrão, apenas número e ponto)
-Digite 99 para cancelar: ''')
-                if preco == "99":
-                    return AltUnid()
-                Alt['[6] Garrafa de Refrigerante:']=[tipo[0],preco]
-                SaveTxt(Alt)
-                input("\nSalvo!")
-                return AltUnid()
-                
-        if opt == "7" and item == "[7] Batata:":
-            limpar_tela()
-            print(f'Batata:\n')
-            print('[1]',tipo[0])
-            print('[2]',tipo[1])
-            alteracao = input('\nDigite o número do que gostaria de alterar (Digite 99 para cancelar): ')
-            if alteracao == "99":
-               return AltUnid() 
-            elif alteracao == "1":
-                nome = input("\nDigite o novo nome que gostaria de registrar (Digite 99 para cancelar): ")
-                if nome == "99":
-                    return AltUnid()
-                Alt['[7] Batata:']=[nome,tipo[1]]
-                SaveTxt(Alt)
-                input("\nSalvo!")
-                return AltUnid()
-            elif alteracao == "2":
-                preco = input('''\nDigite o novo preço que gostaria de registrar
-(sem cifrão, apenas número e ponto)
-Digite 99 para cancelar: ''')
-                if preco == "99":
-                    return AltUnid()
-                Alt['[7] Batata:']=[tipo[0],preco]
-                SaveTxt(Alt)
-                input("\nSalvo!")
-                return AltUnid()
-                
-        if opt == "8" and item == "[8] Batata:":
-            limpar_tela()
-            print(f'Batata:\n')
-            print('[1]',tipo[0])
-            print('[2]',tipo[1])
-            alteracao = input('\nDigite o número do que gostaria de alterar (Digite 99 para cancelar): ')
-            if alteracao == "99":
-                return AltUnid()
-            elif alteracao == "1":
-                nome = input("\nDigite o novo nome que gostaria de registrar (Digite 99 para cancelar): ")
-                if nome == "99":
-                    return AltUnid()
-                Alt['[8] Batata:']=[nome,tipo[1]]
-                SaveTxt(Alt)
-                input("\nSalvo!")
-                return AltUnid()
-            elif alteracao == "2":
-                preco = input('''\nDigite o novo preço que gostaria de registrar
-(sem cifrão, apenas número e ponto)
-Digite 99 para cancelar: ''')
-                if preco == "99":
-                    return AltUnid()
-                Alt['[8] Batata:']=[tipo[0],preco]
-                SaveTxt(Alt)
-                input("\nSalvo!")
-                return AltUnid()
-                
-        if opt == "9" and item == "[9] Batata:":
-            limpar_tela()
-            print(f'Batata:\n')
-            print('[1]',tipo[0])
-            print('[2]',tipo[1])
-            alteracao = input('\nDigite o número do que gostaria de alterar (Digite 99 para cancelar): ')
-            if alteracao == "99":
-                return AltUnid()
-            elif alteracao == "1":
-                nome = input("\nDigite o novo nome que gostaria de registrar (Digite 99 para cancelar): ")
-                if nome == "99":
-                    return AltUnid()
-                Alt['[9] Batata:']=[nome,tipo[1]]
-                SaveTxt(Alt)
-                input("\nSalvo!")
-                return AltUnid()
-            elif alteracao == "2":
-                preco = input('''\nDigite o novo preço que gostaria de registrar
-(sem cifrão, apenas número e ponto)
-Digite 99 para cancelar: ''')
-                if preco == "99":
-                    return AltUnid()
-                Alt['[9] Batata:']=[tipo[0],preco]
-                SaveTxt(Alt)
-                input("\nSalvo!")
-                return AltUnid()
-                
-        if opt == "10" and item == "[10] Sobremesa:":
-            limpar_tela()
-            print(f'Sobremesa:\n')
-            print('[1]',tipo[0])
-            print('[2]',tipo[1])
-            alteracao = input('\nDigite o número do que gostaria de alterar (Digite 99 para cancelar): ')
-            if alteracao == "99":
-                return AltUnid()
-            elif alteracao == "1":
-                nome = input("\nDigite o novo nome que gostaria de registrar (Digite 99 para cancelar): ")
-                if nome == "99":
-                    return AltUnid()
-                Alt['[10] Sobremesa:']=[nome,tipo[1]]
-                SaveTxt(Alt)
-                input("\nSalvo!")
-                return AltUnid()
-            elif alteracao == "2":
-                preco = input('''\nDigite o novo preço que gostaria de registrar
-(sem cifrão, apenas número e ponto)
-Digite 99 para cancelar: ''')
-                if preco == "99":
-                    return AltUnid()
-                Alt['[10] Sobremesa:']=[tipo[0],preco]
-                SaveTxt(Alt)
-                input("\nSalvo!")
-                return AltUnid()
-        
-        if opt == "11" and item == "[11] Sobremesa:":
-            limpar_tela()
-            print(f'Sobremesa:\n')
-            print('[1]',tipo[0])
-            print('[2]',tipo[1])
-            alteracao = input('\nDigite o número do que gostaria de alterar (Digite 99 para cancelar): ')
-            if alteracao == "99":
-                return AltUnid()
-            elif alteracao == "1":
-                nome = input("\nDigite o novo nome que gostaria de registrar (Digite 99 para cancelar): ")
-                if nome == "99":
-                    return AltUnid()
-                Alt['[11] Sobremesa:']=[nome,tipo[1]]
-                SaveTxt(Alt)
-                input("\nSalvo!")
-                return AltUnid()
-            elif alteracao == "2":
-                preco = input('''\nDigite o novo preço que gostaria de registrar
-(sem cifrão, apenas número e ponto)
-Digite 99 para cancelar: ''')
-                if preco == "99":
-                    return AltUnid()
-                Alt['[11] Sobremesa:']=[tipo[0],preco]
-                SaveTxt(Alt)
-                input("\nSalvo!")
-                return AltUnid()
-        
-        if opt == "12" and item == "[12] Sobremesa:":
-            limpar_tela()
-            print(f'Sobremesa:\n')
-            print('[1]',tipo[0])
-            print('[2]',tipo[1])
-            alteracao = input('\nDigite o número do que gostaria de alterar (Digite 99 para cancelar): ')
-            if alteracao == "99":
-                return AltUnid()
-            elif alteracao == "1":
-                nome = input("\nDigite o novo nome que gostaria de registrar (Digite 99 para cancelar): ")
-                if nome == "99":
-                    return AltUnid()
-                Alt['[12] Sobremesa:']=[nome,tipo[1]]
-                SaveTxt(Alt)
-                input("\nSalvo!")
-                return AltUnid()
-            elif alteracao == "2":
-                preco = input('''\nDigite o novo preço que gostaria de registrar
-(sem cifrão, apenas número e ponto)
-Digite 99 para cancelar: ''')
-                if preco == "99":
-                    return AltUnid()
-                Alt['[12] Sobremesa:']=[tipo[0],preco]
-                Alt['[12] Sobremesa:']=[tipo[0],preco]
-                SaveTxt(Alt)
-                input("\nSalvo!")
-                return AltUnid()
-                
+            return ()
+        elif opt.isdigit() and int(opt) <= len(Exib):
+            alterar_item(list(Exib.keys())[int(opt) - 1], Alt)
+        else:
+            input('\nOpção inválida, pressione Enter para tentar novamente.')
+
 # Função para tela de ADMINISTRADOR
 def adm():
     limpar_tela()
@@ -520,10 +222,9 @@ ADMINISTRADOR
 def mostrar_cardapio():
     limpar_tela()
     print('''
-        CARDÁPIO
+CARDÁPIO
 ''')
     for combo, itens in cardapio.items():
-        print(f"[{combo}]:")
         for chave, valor in itens.items():
             print(f" {chave}:{valor}")
         print()
@@ -538,7 +239,7 @@ def pedir_combo():
         return {escolha: cardapio[escolha]}
     else:
         print("Combo não encontrado.")
-        return {}
+        return main()
 
 # Função para montar um pedido personalizado
 def montar_pedido():
