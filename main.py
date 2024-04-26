@@ -244,22 +244,12 @@ def pedir_combo():
 # Função para montar um pedido personalizado
 def montar_pedido():
     limpar_tela()
-    for adicional, ingrediente in itens.items():
-        print(f"\n{adicional}: \n")
-        for chave, valor in ingrediente.items():
-            print(f'{chave}: \t R${valor} ')
-    while True:
-        item = input("Monte o seu proprio pedido: ")
-        if item in itens:
-            return {item: itens[item]}
-        if item == 'sair':
-            break
-        quantidade = int(input(f"Quantidade de {item}: "))
-        carrinho.append({
-            "item": item,
-            "Quantidade": quantidade
-        })
-    return carrinho
+    Exib = LoadTxt("[")
+    for item,tipo in Exib.items():
+        print(item,tipo[0])
+        print('R$',tipo[1],'\n')
+    escolha = input("Digite o iten que você deseja: ")
+    print(Exib)
 
 # Função Ver carrinho
 def ver_carrinho():
