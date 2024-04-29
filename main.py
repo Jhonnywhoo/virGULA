@@ -241,21 +241,49 @@ def pedir_combo():
         print("Combo não encontrado.")
         return main()
 
-# Função para montar um pedido personalizado
-def montar_pedido():
+#função exibir itens
+def exibir_itens():
     limpar_tela()
     Exib = LoadTxt("[")
     for item,tipo in Exib.items():
         print(item,tipo[0])
         print('R$',tipo[1],'\n')
-    escolha = input("Digite o iten que você deseja: ")
-    print(Exib)
+
+# Função para montar um pedido personalizado
+def Pedir_itens():
+    limpar_tela()
+    print("Menu de itens Disponiveis")
+    Exib = LoadTxt("[")
+    for item, tipo in Exib.items():
+        print(item, tipo[0])
+        print('R$', tipo[1], '\n')
+    Alt = LoadTxt
+    while True:
+        opt = input('Digite o número do item que gostaria de alterar (digite 99 para sair): ')
+        if opt == "99":
+                return
+        elif opt.isdigit() and 1 <= int(opt) <= len(Exib):
+                item_index = int(opt) - 1
+                item_escolha = list(Exib.keys())[item_index]
+                nome_item = Exib[item_escolha][0]
+                valor_item = Exib[item_escolha][1]
+                carrinho.append((nome_item, valor_item))
+                print(f"{nome_item} como valor: R$ {valor_item} adicionado ao carrinho.")
+        else:
+            input('\nOpção inválida, pressione Enter para tentar novamente.')
 
 # Função Ver carrinho
 def ver_carrinho():
     limpar_tela()
-    print('Seu carrinho')
-    print(carrinho)
+    if not carrinho:
+        print("O carrinho está vazio.")
+        return
+    total_carrinho = 0
+    print("\nItens no Carrinho:")
+    for nome_lanche, valor_lanche in carrinho:
+        print(f"{nome_lanche}: R${valor_lanche}")
+        total_carrinho += float(valor_lanche)
+    print("\nValor Total do Carrinho: R$", total_carrinho)
 
 #função limpar tela
 def limpar_tela():
@@ -294,13 +322,12 @@ Digite o número do que gostaria de fazer agora:
             
         elif opcao == '2':
             limpar_tela()
-            pedido = pedir_combo()
-            print("Pedido: ", pedido)
+            pedir_combo()
+            
 
         elif opcao == '3':
             limpar_tela()
-            pedido = montar_pedido()
-            print("Pedido completo: ", pedido)
+            Pedir_itens()
 
         elif opcao == '4':
             ver_carrinho()
