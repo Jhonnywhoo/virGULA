@@ -41,10 +41,10 @@ def SaveTxt(Dict):
 
 # Dicionário para armazenar os combos/lanches
 cardapio = {
-    "1": {'Carne':' Cheeseburger', 'Acompanhamento':' Batata frita pequena','Copo ':' 200ml','preço': 39.90},
-    "2": {'Carne':' Frango', 'Acompanhamento':' Batata frita média','Copo':' 200ml','preço': 36.90},
-    "3": {'Carne':' Duplo Burger', 'Acompanhamento':' Batata frita média','Copo':' 200ml','preço': 49.90},
-    "4": {'Carne':' Duplo Burger', 'Acompanhamento':' Batata frita grande','Copo':' 600ml','preço': 59.90}
+    "1": {'Nome': "Aspas",'Lanche':' Cheeseburger', 'Acompanhamento':' Batata frita pequena','Copo':' 200ml','preço': 39.90},
+    "2": {'Nome': "Águdo",'Lanche':' Frango', 'Acompanhamento':' Batata frita média','Copo':' 200ml','preço': 36.90},
+    "3": {'Nome': "Dois pontos",'Lanche':' Duplo Burger', 'Acompanhamento':' Batata frita média','Copo':' 200ml','preço': 49.90},
+    "4": {'Nome': "Virgula",'Lanche':' Duplo Burger', 'Acompanhamento':' Batata frita grande','Copo':' 600ml','preço': 59.90}
 }
 
 carrinho = []
@@ -241,10 +241,14 @@ def pedir_combo():
     mostrar_cardapio()
     escolha = input("Escolha um combo (ex: 1): ")
     if escolha in cardapio:
-        return {escolha: cardapio[escolha]}
+        carrinho.append((cardapio[escolha]['Nome'], cardapio[escolha]['preço']))
+        print('\n')
+        print(Fore.LIGHTYELLOW_EX + "Combo adicionado ao carrinho!! " + Style.RESET_ALL)
+        print(f"\n{cardapio[escolha]['Nome']} - R${cardapio[escolha]['preço']:.2f} adicionado ao carrinho.")
+        i = input("")
     else:
         print("Combo não encontrado.")
-        return main()
+        main()
 
 #função exibir itens
 def exibir_itens():
