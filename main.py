@@ -219,12 +219,12 @@ def RemCombo():
     listaChaves = list(cardapio.keys())
     mostrar_cardapio()
     escolha = input("\nQual combo gostaria de deletar? (digite 99 para sair): ")
+    if escolha == "99":
+        adm()
+        return()
     for chave,itens in cardapio.items():
         for nome,valor in itens.items():
-            if escolha == "99":
-                adm()
-                return()
-            elif escolha.isdigit() and int(escolha) <= len(cardapio):
+            if escolha.isdigit() and int(escolha) <= len(cardapio):
                 escolha = str(escolha)
                 if escolha in cardapio:
                     del cardapio[escolha]
@@ -239,10 +239,11 @@ def RemCombo():
                     cardapio.update(novoCardapio)
                     RemCombo()
                     return()
-            elif not escolha.isdigit():
+            elif not escolha.isdigit() or int(escolha) > len(cardapio):
                 limpar_tela()
                 input("Opção inválida, tente novamente.")
                 RemCombo()
+                return()
             
 # Função para tela de ADMINISTRADOR
 def adm():
