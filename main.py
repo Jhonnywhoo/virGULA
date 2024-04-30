@@ -164,15 +164,87 @@ As alterações são salvas automaticamente no arquivo "main.txt".
         print('R$', tipo[1], '\n')
 
     Alt = LoadTxt()
-    while True:
-        opt = input('Digite o número do item que gostaria de alterar (digite 99 para sair): ')
-        if opt == "99":
-            return ()
-        elif opt.isdigit() and int(opt) <= len(Exib):
-            alterar_item(list(Exib.keys())[int(opt) - 1], Alt)
-        else:
-            input('\nOpção inválida, pressione Enter para tentar novamente.')
+    opt = input('Digite o número do item que gostaria de alterar (digite 99 para sair): ')
+    if opt == "99":
+        return ()
+    elif opt.isdigit() and int(opt) <= len(Exib):
+        alterar_item(list(Exib.keys())[int(opt) - 1], Alt)
+    else:
+        input('\nOpção inválida, pressione Enter para tentar novamente.')
 
+# Funções para alterar ou adicionar combo do cardápio
+def AltCombo():
+    novoCombo = []
+    mostrar_cardapio()
+    chave = input("Digite uma posição existente para modificar ou Enter para adicionar um novo (digite 99 para sair): ")
+    if chave == "99":
+        adm()
+    elif chave.isdigit() and int(chave) <= len(cardapio):
+        print(''' 
+-------------------------------------------------------
+|   1   |    SIM                                      |
+|   2   |    Voltar ao menu                           |
+-------------------------------------------------------
+''')
+        opt=input(f"Deseja sobrescrever o combo da posição {chave}?: ")
+        if opt == "2":
+            AltCombo()
+        elif opt == "1":
+            modCombo = Alteracoes()
+            cardapio[chave] = modCombo
+            input("Combo modificado com sucesso!")
+            AltCombo()
+    elif chave == "":
+        chave = str(len(cardapio) + 1)
+        addCombo = Alteracoes()
+        cardapio[chave] = addCombo
+        input("Novo combo adicionado com sucesso!")
+        limpar_tela()
+        AltCombo()
+    elif not chave.isdigit():
+        input("Comando inválido, tente novamente.")
+        AltCombo()
+    
+def Alteracoes():
+    nome = input("\nAdicione o nome do novo combo: ")
+    lanche = input("Adicione o lanche: ")
+    acomp = input("Agora adicione o acompanhamento: ")
+    copo = input("Adicione o tamanho do copo oferecido: ")
+    preco = float(input("Por último, adicione o preço do novo combo: "))
+    novoCombo = {'Nome': nome,'Lanche': lanche,'Acompanhamento': acomp,'Copo': copo,'preço': preco}
+    return novoCombo 
+
+# Função para remover combo do cardápio
+def RemCombo():
+    listaChaves = list(cardapio.keys())
+    mostrar_cardapio()
+    escolha = input("\nQual combo gostaria de deletar? (digite 99 para sair): ")
+    if escolha == "99":
+        adm()
+        return()
+    for chave,itens in cardapio.items():
+        for nome,valor in itens.items():
+            if escolha.isdigit() and int(escolha) <= len(cardapio):
+                escolha = str(escolha)
+                if escolha in cardapio:
+                    del cardapio[escolha]
+                    novoCardapio = {}
+                    novaChave = 1
+                    for chave in listaChaves:
+                        if chave in cardapio:
+                            novoCardapio[str(novaChave)] = cardapio[chave]
+                            novaChave += 1
+                    input("Removido com sucesso!")
+                    cardapio.clear()
+                    cardapio.update(novoCardapio)
+                    RemCombo()
+                    return()
+            elif not escolha.isdigit() or int(escolha) > len(cardapio):
+                limpar_tela()
+                input("Opção inválida, tente novamente.")
+                RemCombo()
+                return()
+            
 # Função para tela de ADMINISTRADOR
 def adm():
     limpar_tela()
@@ -185,41 +257,42 @@ def adm():
 | Opção |                  Descrição                  |
 -------------------------------------------------------
 |   1   |    Mostrar cardápio atual                   |
-|   2   |    Alterar um combo do cardápio             |
-|   3   |    Alterar um item do menu                  |
-|   4   |    Adicionar ou remover combo               |
-|   5   |    Ver carrinho de pedidos                  |
-|   6   |    Voltar para tela de autenticação         |
+|   2   |    Alterar um item do menu                  |
+|   3   |    Modificar ou adicionar combo             |
+|   4   |    Remover combo existente                  |
+|   5   |    Alterar Usuário administrador            |
+|   6   |    Alterar Senha de administrador           |
 |   7   |    Sair                                     |
 -------------------------------------------------------
 \n
 ''')
         opcao=input("ENTRE COM O NÚMERO DE UMA DAS OPÇÕES ACIMA: ")
         if opcao == "1":
-            limpar_tela()
             mostrar_cardapio()
+            input("")
+            adm()
             return()
         elif opcao == "2":
-            print()
-        elif opcao == "3":
             AltUnid()
             return()
+        elif opcao == "3":
+            AltCombo()
+            return()
         elif opcao == "4":
-            AltAdm()
+            RemCombo()
             return()
         elif opcao == "5":
-            AltSenhaAdm()
+            AltAdm()
             return()
         elif opcao == "6":
-            aut()
+            AltSenhaAdm()
             return()
         elif opcao == "7":
-            limpar_tela()
-            print("Obrigado por usar o programa!\n")
+            aut()
             return()
         else:
             limpar_tela()
-            print("\nOpção inválida, tente novamente.")
+            input("\nOpção inválida, tente novamente.")
 
 # Função para mostrar o cardápio inteiro
 def mostrar_cardapio():
@@ -233,7 +306,6 @@ def mostrar_cardapio():
                combo['Acompanhamento'], combo['Copo'], f"R${combo['preço']:.2f}"]
         table_data.append(row)
     print(tabulate(table_data, headers=headers, tablefmt="psql"))
-    i = input("")
 
 # Função para pedir um combo do cardápio
 def pedir_combo():
@@ -253,7 +325,6 @@ def pedir_combo():
 #função exibir itens
 def exibir_itens():
     limpar_tela()
-    
     print(Fore.YELLOW + "ITENS DISPONÍVEIS\n" + Style.RESET_ALL)
     headers = [Fore.LIGHTMAGENTA_EX + "Número", "Item", "Preço" + Style.RESET_ALL ]
     table_data = []
@@ -269,7 +340,7 @@ def Pedir_itens():
     print("Menu de itens Disponiveis")
     Exib = LoadTxt("[")
     exibir_itens()
-    
+
     opt = input(Fore.CYAN +
             '\n Digite o número do item que gostaria de Adicionar ao seu carrinho (digite 99 para sair): ' + Style.RESET_ALL)
     if opt == "99":
@@ -282,11 +353,11 @@ def Pedir_itens():
         carrinho.append((nome_item, valor_item))
         print('\n')
         print(Fore.LIGHTYELLOW_EX + "Seu pedido foi adicionado ao carrinho!! "+ Style.RESET_ALL)
-            
+
         headers = [ "Número", "Item", "Preço"]
         table_data = []
         Exib = LoadTxt("[")
-            
+
         row = f"{item_escolha}", f"{nome_item}", Fore.GREEN + f"R${valor_item}" + Style.RESET_ALL
         table_data.append(row)
         print(tabulate(table_data, headers=headers, tablefmt="psql"))
@@ -332,7 +403,6 @@ def ver_carrinho():
     print("\n" + Fore.YELLOW + "Valor Total do Carrinho: " +
           Style.RESET_ALL + f"R${total_carrinho:.2f}")
     i = input('')
-    
     print(''' 
 -------------------------------------------------------
 | Opção |                   Descrição                 |
@@ -341,7 +411,6 @@ def ver_carrinho():
 |   2   |    Voltar ao menu                           |
 -------------------------------------------------------
 ''')
-    
     opçao = input("Digite a opçao que deseja escolher: ")
     if opçao == "1":
         opt = input("\nDigite o número do item que deseja remover (digite 99 para sair): ")
@@ -376,12 +445,12 @@ def gerar_comanda():
 def limpar_tela():
     #Comando para ver qual sistema operacional está sendo utilizado
     sistema_operacional = os.name
-        
+
     if sistema_operacional == 'posix': #Se for Unix/Linux/MacOS
         os.system('clear')
     elif sistema_operacional == 'nt': #Se for Windows
         os.system('cls')
-    
+
     else: #Caso não seja identificado ele vai executar os dois comandos
         os.system('clear')
         os.system('cls')
@@ -411,11 +480,10 @@ def main():
         if opcao == '1':
             limpar_tela()
             mostrar_cardapio()
-            
+
         elif opcao == '2':
             limpar_tela()
             pedir_combo()
-            
 
         elif opcao == '3':
             limpar_tela()
@@ -442,4 +510,3 @@ def main():
 # Executar o programa
 aut()
 
-    
