@@ -36,10 +36,10 @@ def SaveTxt(Dict):
 
 # Dicionário para armazenar os combos/lanches
 cardapio = {
-    "1": {'Carne':' Cheeseburger', 'Acompanhamento':' Batata frita pequena','Copo ':' 200ml','preço': 39.90},
-    "2": {'Carne':' Frango', 'Acompanhamento':' Batata frita média','Copo':' 200ml','preço': 36.90},
-    "3": {'Carne':' Duplo Burger', 'Acompanhamento':' Batata frita média','Copo':' 200ml','preço': 49.90},
-    "4": {'Carne':' Duplo Burger', 'Acompanhamento':' Batata frita grande','Copo':' 600ml','preço': 59.90}
+    "1": {'Lanche':' Cheeseburger', 'Acompanhamento':' Batata frita pequena','Copo ':' 200ml','preço': 39.90},
+    "2": {'Lanche':' Frango', 'Acompanhamento':' Batata frita média','Copo':' 200ml','preço': 36.90},
+    "3": {'Lanche':' Duplo Frango', 'Acompanhamento':' Batata frita média','Copo':' 200ml','preço': 49.90},
+    "4": {'Lanche':' Duplo Burger', 'Acompanhamento':' Batata frita grande','Copo':' 600ml','preço': 59.90}
 }
 
 carrinho = []
@@ -123,6 +123,26 @@ def AltSenhaAdm():
             return adm()
 
 # Funções para alterar preço de unidade do montar pedido
+def AltUnid():
+    limpar_tela()
+    print('''
+Aqui é possível alterar o nome e o preço dos itens disponíveis no menu "Montar Combo" dos clientes.
+As alterações são salvas automaticamente no arquivo "main.txt".
+''')
+    Exib = LoadTxt("[")
+    for item, tipo in Exib.items():
+        print(item, tipo[0])
+        print('R$', tipo[1], '\n')
+    
+    Alt = LoadTxt()
+    opt = input('Digite o número do item que gostaria de alterar (digite 99 para sair): ')
+    if opt == "99":
+        return adm()
+    elif opt.isdigit() and int(opt) <= len(Exib):
+        alterar_item(list(Exib.keys())[int(opt) - 1], Alt)
+    else:
+        input('\nOpção inválida, pressione Enter para tentar novamente.')
+
 def alterar_item(item, Alt):
     limpar_tela()
     print(f'{item}:\n')
@@ -130,7 +150,7 @@ def alterar_item(item, Alt):
     print('[2]', Alt[item][1])
     alteracao = input('\nDigite o número do que gostaria de alterar (Digite 99 para cancelar): ')
     if alteracao == "99":
-        return
+        return AltUnid()
     elif alteracao == "1":
         nome = input(f"\nDigite o novo nome que gostaria de registrar para {item} (Digite 99 para cancelar): ")
         if nome == "99":
@@ -146,27 +166,6 @@ Digite 99 para cancelar: ''')
     SaveTxt(Alt)
     input("\nSalvo!")
     return AltUnid()
-
-def AltUnid():
-    limpar_tela()
-    print('''
-Aqui é possível alterar o nome e o preço dos itens disponíveis no menu "Montar Combo" dos clientes.
-As alterações são salvas automaticamente no arquivo "main.txt".
-''')
-    Exib = LoadTxt("[")
-    for item, tipo in Exib.items():
-        print(item, tipo[0])
-        print('R$', tipo[1], '\n')
-
-    Alt = LoadTxt()
-    while True:
-        opt = input('Digite o número do item que gostaria de alterar (digite 99 para sair): ')
-        if opt == "99":
-            return ()
-        elif opt.isdigit() and int(opt) <= len(Exib):
-            alterar_item(list(Exib.keys())[int(opt) - 1], Alt)
-        else:
-            input('\nOpção inválida, pressione Enter para tentar novamente.')
 
 # Função para tela de ADMINISTRADOR
 def adm():
@@ -228,7 +227,6 @@ CARDÁPIO
         for chave, valor in itens.items():
             print(f" {chave}:{valor}")
         print()
-    voltarmenu = input("Aperte enter para retornar ao menu: ")
 
 # Função para pedir um combo do cardápio
 def pedir_combo():
@@ -242,20 +240,40 @@ def pedir_combo():
         return main()
 
 # Função para montar um pedido personalizado
-def montar_pedido():
+def Pedir_itens():
     limpar_tela()
+    print("Menu de itens Disponiveis")
     Exib = LoadTxt("[")
-    for item,tipo in Exib.items():
-        print(item,tipo[0])
-        print('R$',tipo[1],'\n')
-    escolha = input("Digite o iten que você deseja: ")
-    print(Exib)
+    for item, tipo in Exib.items():
+        print(item, tipo[0])
+        print('R$', tipo[1], '\n')
+    Alt = LoadTxt
+    while True:
+        opt = input('Digite o número do item que gostaria de alterar (digite 99 para sair): ')
+        if opt == "99":
+                return
+        elif opt.isdigit() and 1 <= int(opt) <= len(Exib):
+                item_index = int(opt) - 1
+                selected_item = list(Exib.keys())[item_index]
+                nome_item = Exib[selected_item][0]
+                valor_item = Exib[selected_item][1]
+                carrinho.append((nome_item, valor_item))
+                print(f"{nome_item} como valor: R$ {valor_item} adicionado ao carrinho.")
+        else:
+            input('\nOpção inválida, pressione Enter para tentar novamente.')
 
 # Função Ver carrinho
 def ver_carrinho():
     limpar_tela()
-    print('Seu carrinho')
-    print(carrinho)
+    if not carrinho:
+        print("O carrinho está vazio.")
+        return
+    total_carrinho = 0
+    print("\nItens no Carrinho:")
+    for nome_lanche, valor_lanche in carrinho:
+        print(f"{nome_lanche}: R${valor_lanche}")
+        total_carrinho += float(valor_lanche)
+    print("\nValor Total do Carrinho: R$", total_carrinho)
 
 #função limpar tela
 def limpar_tela():
@@ -294,13 +312,11 @@ Digite o número do que gostaria de fazer agora:
             
         elif opcao == '2':
             limpar_tela()
-            pedido = pedir_combo()
-            print("Pedido: ", pedido)
+            pedir_combo()
 
         elif opcao == '3':
             limpar_tela()
-            pedido = montar_pedido()
-            print("Pedido completo: ", pedido)
+            Pedir_itens()
 
         elif opcao == '4':
             ver_carrinho()
