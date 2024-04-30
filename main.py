@@ -1,6 +1,11 @@
 import os
 import pwinput
 import locale
+import random
+import string
+from tabulate import tabulate
+from colorama import Fore, Style
+
 # Programa para uma empresa de fast food
 
 # Logo
@@ -36,10 +41,10 @@ def SaveTxt(Dict):
 
 # Dicionário para armazenar os combos/lanches
 cardapio = {
-    "1": {'Lanche':' Cheeseburger', 'Acompanhamento':' Batata frita pequena','Copo ':' 200ml','preço': 39.90},
-    "2": {'Lanche':' Frango', 'Acompanhamento':' Batata frita média','Copo':' 200ml','preço': 36.90},
-    "3": {'Lanche':' Duplo Frango', 'Acompanhamento':' Batata frita média','Copo':' 200ml','preço': 49.90},
-    "4": {'Lanche':' Duplo Burger', 'Acompanhamento':' Batata frita grande','Copo':' 600ml','preço': 59.90}
+    "1": {'Nome': "Aspas",'Lanche':' Cheeseburger', 'Acompanhamento':' Batata frita pequena','Copo':' 200ml','preço': 39.90},
+    "2": {'Nome': "Águdo",'Lanche':' Frango', 'Acompanhamento':' Batata frita média','Copo':' 200ml','preço': 36.90},
+    "3": {'Nome': "Dois pontos",'Lanche':' Duplo Burger', 'Acompanhamento':' Batata frita média','Copo':' 200ml','preço': 49.90},
+    "4": {'Nome': "Virgula",'Lanche':' Duplo Burger', 'Acompanhamento':' Batata frita grande','Copo':' 600ml','preço': 59.90}
 }
 
 carrinho = []
@@ -123,26 +128,6 @@ def AltSenhaAdm():
             return adm()
 
 # Funções para alterar preço de unidade do montar pedido
-def AltUnid():
-    limpar_tela()
-    print('''
-Aqui é possível alterar o nome e o preço dos itens disponíveis no menu "Montar Combo" dos clientes.
-As alterações são salvas automaticamente no arquivo "main.txt".
-''')
-    Exib = LoadTxt("[")
-    for item, tipo in Exib.items():
-        print(item, tipo[0])
-        print('R$', tipo[1], '\n')
-    
-    Alt = LoadTxt()
-    opt = input('Digite o número do item que gostaria de alterar (digite 99 para sair): ')
-    if opt == "99":
-        return adm()
-    elif opt.isdigit() and int(opt) <= len(Exib):
-        alterar_item(list(Exib.keys())[int(opt) - 1], Alt)
-    else:
-        input('\nOpção inválida, pressione Enter para tentar novamente.')
-
 def alterar_item(item, Alt):
     limpar_tela()
     print(f'{item}:\n')
@@ -150,7 +135,7 @@ def alterar_item(item, Alt):
     print('[2]', Alt[item][1])
     alteracao = input('\nDigite o número do que gostaria de alterar (Digite 99 para cancelar): ')
     if alteracao == "99":
-        return AltUnid()
+        return
     elif alteracao == "1":
         nome = input(f"\nDigite o novo nome que gostaria de registrar para {item} (Digite 99 para cancelar): ")
         if nome == "99":
@@ -167,66 +152,159 @@ Digite 99 para cancelar: ''')
     input("\nSalvo!")
     return AltUnid()
 
+def AltUnid():
+    limpar_tela()
+    print('''
+Aqui é possível alterar o nome e o preço dos itens disponíveis no menu "Montar Combo" dos clientes.
+As alterações são salvas automaticamente no arquivo "main.txt".
+''')
+    Exib = LoadTxt("[")
+    for item, tipo in Exib.items():
+        print(item, tipo[0])
+        print('R$', tipo[1], '\n')
+
+    Alt = LoadTxt()
+    opt = input('Digite o número do item que gostaria de alterar (digite 99 para sair): ')
+    if opt == "99":
+        return ()
+    elif opt.isdigit() and int(opt) <= len(Exib):
+        alterar_item(list(Exib.keys())[int(opt) - 1], Alt)
+    else:
+        input('\nOpção inválida, pressione Enter para tentar novamente.')
+
+# Funções para alterar ou adicionar combo do cardápio
+def AltCombo():
+    novoCombo = []
+    mostrar_cardapio()
+    chave = input("Digite uma posição existente para modificar ou Enter para adicionar um novo (digite 99 para sair): ")
+    if chave == "99":
+        adm()
+    elif chave.isdigit() and int(chave) <= len(cardapio):
+        print(''' 
+-------------------------------------------------------
+|   1   |    SIM                                      |
+|   2   |    Voltar ao menu                           |
+-------------------------------------------------------
+''')
+        opt=input(f"Deseja sobrescrever o combo da posição {chave}?: ")
+        if opt == "2":
+            AltCombo()
+        elif opt == "1":
+            modCombo = Alteracoes()
+            cardapio[chave] = modCombo
+            input("Combo modificado com sucesso!")
+            AltCombo()
+    elif chave == "":
+        chave = str(len(cardapio) + 1)
+        addCombo = Alteracoes()
+        cardapio[chave] = addCombo
+        input("Novo combo adicionado com sucesso!")
+        limpar_tela()
+        AltCombo()
+    elif not chave.isdigit():
+        input("Comando inválido, tente novamente.")
+        AltCombo()
+    
+def Alteracoes():
+    nome = input("\nAdicione o nome do novo combo: ")
+    lanche = input("Adicione o lanche: ")
+    acomp = input("Agora adicione o acompanhamento: ")
+    copo = input("Adicione o tamanho do copo oferecido: ")
+    preco = float(input("Por último, adicione o preço do novo combo: "))
+    novoCombo = {'Nome': nome,'Lanche': lanche,'Acompanhamento': acomp,'Copo': copo,'preço': preco}
+    return novoCombo 
+
+# Função para remover combo do cardápio
+def RemCombo():
+    listaChaves = list(cardapio.keys())
+    mostrar_cardapio()
+    escolha = input("\nQual combo gostaria de deletar? (digite 99 para sair): ")
+    for chave,itens in cardapio.items():
+        for nome,valor in itens.items():
+            if escolha == "99":
+                adm()
+                return()
+            elif escolha.isdigit() and int(escolha) <= len(cardapio):
+                escolha = str(escolha)
+                if escolha in cardapio:
+                    del cardapio[escolha]
+                    novoCardapio = {}
+                    novaChave = 1
+                    for chave in listaChaves:
+                        if chave in cardapio:
+                            novoCardapio[str(novaChave)] = cardapio[chave]
+                            novaChave += 1
+                    input("Removido com sucesso!")
+                    cardapio.clear()
+                    cardapio.update(novoCardapio)
+                    RemCombo()
+                    return()
+            elif not escolha.isdigit():
+                limpar_tela()
+                input("Opção inválida, tente novamente.")
+                RemCombo()
+            
 # Função para tela de ADMINISTRADOR
 def adm():
     limpar_tela()
     while True:
         Logo()
         print('''
-ADMINISTRADOR
-
-[1] Mostrar cardápio de combos atual
-
-[2] Alterar um combo (cardápio)
-
-[3] Alterar unidade (montar combo)
-
-[4] Alterar usuário administrador
-
-[5] Alterar senha administrador
-
-[6] Voltar para tela de autenticação
-
-[7] Fechar programa
-
+-------------------------------------------------------
+|                 PAINEL DE ADMINISTRAÇÃO             |
+-------------------------------------------------------
+| Opção |                  Descrição                  |
+-------------------------------------------------------
+|   1   |    Mostrar cardápio atual                   |
+|   2   |    Alterar um item do menu                  |
+|   3   |    Modificar ou adicionar combo             |
+|   4   |    Remover combo existente                  |
+|   5   |    Alterar Usuário administrador            |
+|   6   |    Alterar Senha de administrador           |
+|   7   |    Sair                                     |
+-------------------------------------------------------
+\n
 ''')
         opcao=input("ENTRE COM O NÚMERO DE UMA DAS OPÇÕES ACIMA: ")
         if opcao == "1":
-            limpar_tela()
             mostrar_cardapio()
+            input("")
+            adm()
             return()
         elif opcao == "2":
-            print()
-        elif opcao == "3":
             AltUnid()
             return()
+        elif opcao == "3":
+            AltCombo()
+            return()
         elif opcao == "4":
-            AltAdm()
+            RemCombo()
             return()
         elif opcao == "5":
-            AltSenhaAdm()
+            AltAdm()
             return()
         elif opcao == "6":
-            aut()
+            AltSenhaAdm()
             return()
         elif opcao == "7":
-            limpar_tela()
-            print("Obrigado por usar o programa!\n")
+            aut()
             return()
         else:
             limpar_tela()
-            print("\nOpção inválida, tente novamente.")
+            input("\nOpção inválida, tente novamente.")
 
 # Função para mostrar o cardápio inteiro
 def mostrar_cardapio():
     limpar_tela()
-    print('''
-CARDÁPIO
-''')
-    for combo, itens in cardapio.items():
-        for chave, valor in itens.items():
-            print(f" {chave}:{valor}")
-        print()
+    print(Fore.YELLOW + "CARDÁPIO\n" + Style.RESET_ALL)
+    headers = [Fore.GREEN + "ID", "Nome", "Lanche",
+               "Acompanhamento", "Copo", "Preço" + Style.RESET_ALL]
+    table_data = []
+    for num, combo in cardapio.items():
+        row = [num, combo['Nome'], combo['Lanche'],
+               combo['Acompanhamento'], combo['Copo'], f"R${combo['preço']:.2f}"]
+        table_data.append(row)
+    print(tabulate(table_data, headers=headers, tablefmt="psql"))
 
 # Função para pedir um combo do cardápio
 def pedir_combo():
@@ -234,57 +312,147 @@ def pedir_combo():
     mostrar_cardapio()
     escolha = input("Escolha um combo (ex: 1): ")
     if escolha in cardapio:
-        return {escolha: cardapio[escolha]}
+        carrinho.append((cardapio[escolha]['Nome'], cardapio[escolha]['preço']))
+        print('\n')
+        print(Fore.LIGHTYELLOW_EX + "Combo adicionado ao carrinho!! " + Style.RESET_ALL)
+        print(f"\n{cardapio[escolha]['Nome']} - R${cardapio[escolha]['preço']:.2f} adicionado ao carrinho.")
+        i = input("")
     else:
         print("Combo não encontrado.")
-        return main()
+        main()
+
+#função exibir itens
+def exibir_itens():
+    limpar_tela()
+
+    print(Fore.YELLOW + "ITENS DISPONÍVEIS\n" + Style.RESET_ALL)
+    headers = [Fore.LIGHTMAGENTA_EX + "Número", "Item", "Preço" + Style.RESET_ALL ]
+    table_data = []
+    Exib = LoadTxt("[")
+    for item, tipo in Exib.items():
+        row = [item, tipo[0], Fore.GREEN + f"R${tipo[1]}" + Style.RESET_ALL]
+        table_data.append(row)
+    print(tabulate(table_data, headers=headers, tablefmt="psql"))
 
 # Função para montar um pedido personalizado
 def Pedir_itens():
     limpar_tela()
     print("Menu de itens Disponiveis")
     Exib = LoadTxt("[")
-    for item, tipo in Exib.items():
-        print(item, tipo[0])
-        print('R$', tipo[1], '\n')
-    Alt = LoadTxt
-    while True:
-        opt = input('Digite o número do item que gostaria de alterar (digite 99 para sair): ')
-        if opt == "99":
-                return
-        elif opt.isdigit() and 1 <= int(opt) <= len(Exib):
-                item_index = int(opt) - 1
-                selected_item = list(Exib.keys())[item_index]
-                nome_item = Exib[selected_item][0]
-                valor_item = Exib[selected_item][1]
-                carrinho.append((nome_item, valor_item))
-                print(f"{nome_item} como valor: R$ {valor_item} adicionado ao carrinho.")
-        else:
-            input('\nOpção inválida, pressione Enter para tentar novamente.')
+    exibir_itens()
 
-# Função Ver carrinho
+    opt = input(Fore.CYAN +
+            '\n Digite o número do item que gostaria de Adicionar ao seu carrinho (digite 99 para sair): ' + Style.RESET_ALL)
+    if opt == "99":
+            return
+    elif opt.isdigit() and 1 <= int(opt) <= len(Exib):
+        item_index = int(opt) - 1
+        item_escolha = list(Exib.keys())[item_index]
+        nome_item = Exib[item_escolha][0]
+        valor_item = Exib[item_escolha][1]
+        carrinho.append((nome_item, valor_item))
+        print('\n')
+        print(Fore.LIGHTYELLOW_EX + "Seu pedido foi adicionado ao carrinho!! "+ Style.RESET_ALL)
+
+        headers = [ "Número", "Item", "Preço"]
+        table_data = []
+        Exib = LoadTxt("[")
+
+        row = f"{item_escolha}", f"{nome_item}", Fore.GREEN + f"R${valor_item}" + Style.RESET_ALL
+        table_data.append(row)
+        print(tabulate(table_data, headers=headers, tablefmt="psql"))
+        i = input("")
+    else:
+        input('\nOpção inválida, pressione Enter para tentar novamente.')
+
+#FUNÇÃO PARA EXIBIR APENAS O CARRINHO
+def exibir_carrinho():
+    limpar_tela()
+    if not carrinho:
+        print(Fore.RED + "O carrinho está vazio." + Style.RESET_ALL)
+        return
+    print(Fore.YELLOW + "CARRINHO\n" + Style.RESET_ALL)
+    headers = [Fore.GREEN + "Item", "Preço" + Style.RESET_ALL]
+    table_data = []
+    total_carrinho = 0
+    for nome_lanche, valor_lanche in carrinho:
+        row = [nome_lanche, f"R${valor_lanche}"]
+        table_data.append(row)
+        total_carrinho += float(valor_lanche)
+    print(tabulate(table_data, headers=headers, tablefmt="psql"))
+    print("\n" + Fore.YELLOW + "Valor Total do Carrinho: " +
+          Style.RESET_ALL + f"R${total_carrinho:.2f}")
+    i = input('')
+
+
+#FUNÇÃO PARA VER E DELETAR ALGO DO CARRINHO  
 def ver_carrinho():
     limpar_tela()
     if not carrinho:
-        print("O carrinho está vazio.")
+        print(Fore.RED + "O carrinho está vazio." + Style.RESET_ALL)
         return
+    print(Fore.YELLOW + "CARRINHO\n" + Style.RESET_ALL)
+    headers = [Fore.GREEN + "Item", "Preço" + Style.RESET_ALL]
+    table_data = []
     total_carrinho = 0
-    print("\nItens no Carrinho:")
     for nome_lanche, valor_lanche in carrinho:
-        print(f"{nome_lanche}: R${valor_lanche}")
+        row = [nome_lanche, f"R${valor_lanche}"]
+        table_data.append(row)
         total_carrinho += float(valor_lanche)
-    print("\nValor Total do Carrinho: R$", total_carrinho)
+    print(tabulate(table_data, headers=headers, tablefmt="psql"))
+    print("\n" + Fore.YELLOW + "Valor Total do Carrinho: " +
+          Style.RESET_ALL + f"R${total_carrinho:.2f}")
+    i = input('')
+
+    print(''' 
+-------------------------------------------------------
+| Opção |                   Descrição                 |
+-------------------------------------------------------
+|   1   |    Excluir item ou combo do pedido          |
+|   2   |    Voltar ao menu                           |
+-------------------------------------------------------
+''')
+
+    opçao = input("Digite a opçao que deseja escolher: ")
+    if opçao == "1":
+        opt = input("\nDigite o número do item que deseja remover (digite 99 para sair): ")
+        if opt == "99":
+            return
+        elif opt.isdigit() and 1 <= int(opt) <= len(carrinho):
+            item_index = int(opt) - 1
+            del carrinho[item_index]
+        print("Item removido do carrinho.")
+        exibir_carrinho()
+    elif opçao == "2":
+        return()  
+    else:
+        input("\nOpção inválida, pressione Enter para tentar novamente.")
+
+def finalizar_pedido():
+    exibir_carrinho()
+    print(f''' 
+    Sua compra foi finalizada
+    sua comanda: {gerar_comanda()}
+''' ) 
+
+
+#Função Gerar comanda
+def gerar_comanda():
+    letras = string.ascii_uppercase  # Obtém todas as letras maiúsculas de A a Z
+    numeros = string.digits  # Obtém todos os dígitos de 0 a 9
+    Comanda = ''.join(random.choices(letras + numeros, k=5))  # Escolhe 5 caracteres aleatórios
+    return Comanda
 
 #função limpar tela
 def limpar_tela():
     #Comando para ver qual sistema operacional está sendo utilizado
     sistema_operacional = os.name
-        
+
     if sistema_operacional == 'posix': #Se for Unix/Linux/MacOS
         os.system('clear')
     elif sistema_operacional == 'nt': #Se for Windows
         os.system('cls')
-    
+
     else: #Caso não seja identificado ele vai executar os dois comandos
         os.system('clear')
         os.system('cls')
@@ -294,14 +462,19 @@ def main():
     while True:
         Logo()
         print('''
-Sinta-se em casa.
-Digite o número do que gostaria de fazer agora:
+--------------------Sinta-se em casa.-------------------
 
-1. Mostrar cardápio
-2. Pedir um combo
-3. Montar seu próprio pedido
-4. Ver carrinho
-5. Sair
+
+ -------------------------------------------------------
+| Opção |                 Opções                       |
+    ----------------------------------------------------
+|   1   |          Mostrar cardápio                    |
+|   2   |          Pedir um combo                      |
+|   3   |          Montar seu próprio pedido           |
+|   4   |          Ver carrinho                        |
+|   5   |          Finalizar pedido                    |
+|   6   |          Sair                                |
+--------------------------------------------------------
 
 ''')
         opcao = input("Escolha uma opção: ")
@@ -309,10 +482,11 @@ Digite o número do que gostaria de fazer agora:
         if opcao == '1':
             limpar_tela()
             mostrar_cardapio()
-            
+
         elif opcao == '2':
             limpar_tela()
             pedir_combo()
+
 
         elif opcao == '3':
             limpar_tela()
@@ -323,6 +497,13 @@ Digite o número do que gostaria de fazer agora:
 
         elif opcao == '5':
             limpar_tela()
+            exibir_carrinho()
+            finalizar_pedido()
+            print('''Agradecemos por utilizar o nosso serviço, Volte sempre !!! ''')
+            break
+
+        elif opcao == '6':
+            limpar_tela()
             print("\nObrigado por usar o programa!\n")
             break
         else:
@@ -332,4 +513,3 @@ Digite o número do que gostaria de fazer agora:
 # Executar o programa
 aut()
 
-    
