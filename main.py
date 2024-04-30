@@ -325,7 +325,6 @@ def pedir_combo():
 #função exibir itens
 def exibir_itens():
     limpar_tela()
-
     print(Fore.YELLOW + "ITENS DISPONÍVEIS\n" + Style.RESET_ALL)
     headers = [Fore.LIGHTMAGENTA_EX + "Número", "Item", "Preço" + Style.RESET_ALL ]
     table_data = []
@@ -404,7 +403,6 @@ def ver_carrinho():
     print("\n" + Fore.YELLOW + "Valor Total do Carrinho: " +
           Style.RESET_ALL + f"R${total_carrinho:.2f}")
     i = input('')
-
     print(''' 
 -------------------------------------------------------
 | Opção |                   Descrição                 |
@@ -413,7 +411,6 @@ def ver_carrinho():
 |   2   |    Voltar ao menu                           |
 -------------------------------------------------------
 ''')
-
     opçao = input("Digite a opçao que deseja escolher: ")
     if opçao == "1":
         opt = input("\nDigite o número do item que deseja remover (digite 99 para sair): ")
@@ -487,7 +484,6 @@ def main():
         elif opcao == '2':
             limpar_tela()
             pedir_combo()
-
 
         elif opcao == '3':
             limpar_tela()
