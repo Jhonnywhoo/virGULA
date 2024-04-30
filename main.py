@@ -98,7 +98,7 @@ def AltAdm():
                 return adm()
         if usuario_teste == dados[0]:
             usuario_novo = input("Digite o novo usuário administrador: ")
-            while '.' in usuario_novo:
+            while '.' in usuario_novo: # para evitar conflitos no .txt
                 input("O usuário não pode conter ponto(.), tente novamente: ")
             Login["login"]=[usuario_novo,dados[1]]
             SaveTxt(Login)
@@ -120,7 +120,7 @@ def AltSenhaAdm():
         if senha_teste in dados[1]:
             limpar_tela()
             nova_senha = input("Digite a nova senha: ")
-            while '.' in nova_senha:
+            while '.' in nova_senha: # Para evitar conflitos no .txt
                 nova_senha = input("A senha não pode conter ponto(.), tente novamente: ")
             Login["login"]=[dados[0],nova_senha]
             SaveTxt(Login)
@@ -158,7 +158,7 @@ def AltUnid():
 Aqui é possível alterar o nome e o preço dos itens disponíveis no menu "Montar Combo" dos clientes.
 As alterações são salvas automaticamente no arquivo "main.txt".
 ''')
-    Exib = LoadTxt("[")
+    Exib = LoadTxt("[") # formata uma variável que receba os itens do .txt filtrados, apenas para exibir
     for item, tipo in Exib.items():
         print(item, tipo[0])
         print('R$', tipo[1], '\n')
@@ -167,8 +167,8 @@ As alterações são salvas automaticamente no arquivo "main.txt".
     opt = input('Digite o número do item que gostaria de alterar (digite 99 para sair): ')
     if opt == "99":
         return ()
-    elif opt.isdigit() and int(opt) <= len(Exib):
-        alterar_item(list(Exib.keys())[int(opt) - 1], Alt)
+    elif opt.isdigit() and int(opt) <= len(Exib): # filtro para a escolha ser dígito e estar na length no cardápio
+        alterar_item(list(Exib.keys())[int(opt) - 1], Alt) # carrega a outra função já com parmetros de lista, excluir primeira linha e variável Alt
     else:
         input('\nOpção inválida, pressione Enter para tentar novamente.')
 
@@ -179,7 +179,7 @@ def AltCombo():
     chave = input("Digite uma posição existente para modificar ou Enter para adicionar um novo (digite 99 para sair): ")
     if chave == "99":
         adm()
-    elif chave.isdigit() and int(chave) <= len(cardapio):
+    elif chave.isdigit() and int(chave) <= len(cardapio): # checa se o novo combo vai sobrescrever ou adicionar na lista
         print(''' 
 -------------------------------------------------------
 |   1   |    SIM                                      |
@@ -190,22 +190,22 @@ def AltCombo():
         if opt == "2":
             AltCombo()
         elif opt == "1":
-            modCombo = Alteracoes()
-            cardapio[chave] = modCombo
+            modCombo = Alteracoes() # carrega a função com todas as perguntas necessárias para sobresvrever o combo
+            cardapio[chave] = modCombo # variável [chave] foi a escolha do usuário
             input("Combo modificado com sucesso!")
             AltCombo()
     elif chave == "":
-        chave = str(len(cardapio) + 1)
-        addCombo = Alteracoes()
+        chave = str(len(cardapio) + 1) # variável [chave] ganha nova index para ser adicionada ao final do cardápio
+        addCombo = Alteracoes() # carrega a função com todas as perguntas necessárias para sobresvrever o combo
         cardapio[chave] = addCombo
         input("Novo combo adicionado com sucesso!")
         limpar_tela()
         AltCombo()
-    elif not chave.isdigit():
+    elif not chave.isdigit() or int(chave) > len(cardapio): # checa se a entrada para variável [chave] é uma opção válida
         input("Comando inválido, tente novamente.")
         AltCombo()
     
-def Alteracoes():
+def Alteracoes(): # formata um novo dicionário para adicionar linha ao cardápio
     nome = input("\nAdicione o nome do novo combo: ")
     lanche = input("Adicione o lanche: ")
     acomp = input("Agora adicione o acompanhamento: ")
@@ -216,7 +216,7 @@ def Alteracoes():
 
 # Função para remover combo do cardápio
 def RemCombo():
-    listaChaves = list(cardapio.keys())
+    listaChaves = list(cardapio.keys()) # armazena em lista as chaves que existem no cardápio 
     mostrar_cardapio()
     escolha = input("\nQual combo gostaria de deletar? (digite 99 para sair): ")
     if escolha == "99":
@@ -224,22 +224,22 @@ def RemCombo():
         return()
     for chave,itens in cardapio.items():
         for nome,valor in itens.items():
-            if escolha.isdigit() and int(escolha) <= len(cardapio):
+            if escolha.isdigit() and int(escolha) <= len(cardapio): # checa se escolha é válido e se está no cardápio
                 escolha = str(escolha)
                 if escolha in cardapio:
                     del cardapio[escolha]
-                    novoCardapio = {}
-                    novaChave = 1
-                    for chave in listaChaves:
-                        if chave in cardapio:
-                            novoCardapio[str(novaChave)] = cardapio[chave]
-                            novaChave += 1
+                    novoCardapio = {} # cria um cardápio vazio para sobrescrever, para que todas as chaves sejam renomeadas corretamente
+                    novaChave = 1 # começa a contagem das chaves do novo cardápio em 1
+                    for chave in listaChaves: # varre as chaves do cardápio antigo para armazenar as novas corretamente
+                        if chave in cardapio: # checa quantas chaves serão necessárias levando em conta que 1 item foi exluído, começando do 1
+                            novoCardapio[str(novaChave)] = cardapio[chave] # novo cardápio recebe os combos do antigo cardápio e registra nova chave para eles
+                            novaChave += 1 # adiciona 1 para chave, para listagem crescente correta
                     input("Removido com sucesso!")
-                    cardapio.clear()
-                    cardapio.update(novoCardapio)
+                    cardapio.clear() # limpa o cardápio antigo
+                    cardapio.update(novoCardapio) # atualiza o cardápio com o novo
                     RemCombo()
                     return()
-            elif not escolha.isdigit() or int(escolha) > len(cardapio):
+            elif not escolha.isdigit() or int(escolha) > len(cardapio): # checa se a opção digitada está no cardápio e se é valida
                 limpar_tela()
                 input("Opção inválida, tente novamente.")
                 RemCombo()
