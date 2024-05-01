@@ -1,3 +1,15 @@
+'''
+Trabalho MINI-CRUD a pedido do Professor Luiz.
+
+Nosso CRUD propõe criar uma ferramenta de gestão e atendimento para um restaurante fast-food baseado em cardápio de combos.
+O cardápio principal utiliza funções de dicionário Python, enquanto os itens vendidos separadamente e o login administrativo funcionam em arquivo ".txt".
+
+Jhonny Wendel Oliveira de Brito - 1D ADS
+Gustavo de Freitas Andrade - 1D ADS
+Enzo Reis Bernardino - 1D ADS
+Alex Michel Facciolla da Silva - 1D ADS
+'''
+
 import os
 import pwinput
 import locale
