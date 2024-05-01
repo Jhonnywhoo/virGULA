@@ -455,6 +455,27 @@ def limpar_tela():
         os.system('clear')
         os.system('cls')
 
+# classificar atendimento 
+def classificar_atendimento():
+    print("como classifca o atendimento ?")
+    print("1. exclente")
+    print("2. bom")
+    print("3. regular")
+    print("4. ruim")
+
+    opcao = input("escolha uma das opções: ")
+
+    if opcao == '1':
+        print("voce classificou o atendimento como EXCLENTE ")
+    elif opcao == '2':
+        print("voce classificou o atendimento como BOM!")
+    elif opcao == '3':
+        print("voce classificou o atendimento como REGULAR!")
+    elif opcao == '4':
+        print("voce classificou o atendimento como RUIM! ")
+    else:
+        print("opcao invalida, escolha uma opcao valida.")
+
 # Função principal
 def main():
     while True:
@@ -475,7 +496,6 @@ def main():
 --------------------------------------------------------
 
 ''')
-        
         opcao = input("Escolha uma opção: ")
 
         if opcao == '1':
@@ -511,29 +531,3 @@ def main():
 
 # Executar o programa
 aut()
-
-
-#classificar atendimento 
-
-
-def classificar_atendimento():
-    print("como classifca o atendimento ?")
-    print("1. exclente")
-    print("2. bom")
-    print("3. regular")
-    print("4. ruim")
-
-    opcao = input("escolha uma das opções: ")
-
-    if opcao == '1':
-        print("voce classificou o atendimento como EXCLENTE ")
-    elif opcao == '2':
-        print("voce classificou o atendimento como BOM!")
-    elif opcao == '3':
-        print("voce classificou o atendimento como REGULAR!")
-    elif opcao == '4':
-        print("voce classificou o atendimento como RUIM! ")
-    else:
-        print("opcao invalida, escolha uma opcao valida.")
-
-classificar_atendimento()
