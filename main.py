@@ -7,6 +7,7 @@ from tabulate import tabulate
 from colorama import Fore, Style
 
 # Programa para uma empresa de fast food
+carrinho = []
 
 # Logo
 def Logo():
@@ -19,26 +20,6 @@ Y88b    / "  888-~\d888     888   | 888       d8b
     Y    888 888    "88__/   "8__/  888___/      Y88b
 ''')
 
-# Função para carregar dados do TXT
-def LoadTxt(tipo='todos'):
-    L0=[] # Lista que recebrá TXT
-    L1={} # DCT que receberá a lista
-    with open("main.txt",'r') as Dados:
-        for i in Dados:
-            if tipo == 'todos':
-                L0.append(i.strip().split(","))
-            elif tipo in i:
-                L0.append(i.strip().split(","))
-    for i in L0: # Tranforma lista em dicionario
-        L1[i[0]]=[i[1],i[2]]
-    return L1
-
-# Função para salvar TXT
-def SaveTxt(Dict):
-    with open("main.txt", 'w') as Dados:
-        for chave,dados in Dict.items():
-            Dados.write(f"{chave},{dados[0]},{dados[1]}\n")
-
 # Dicionário para armazenar os combos/lanches
 cardapio = {
     "1": {'Nome': "Aspas",'Lanche':' Cheeseburger', 'Acompanhamento':' Batata frita pequena','Copo':' 200ml','preço': 39.90},
@@ -47,7 +28,108 @@ cardapio = {
     "4": {'Nome': "Virgula",'Lanche':' Duplo Burger', 'Acompanhamento':' Batata frita grande','Copo':' 600ml','preço': 59.90}
 }
 
-carrinho = []
+# Função principal de atendimento
+def main():
+    while True:
+        Logo()
+        print('''
+--------------------Sinta-se em casa.-------------------
+
+
+ -------------------------------------------------------
+| Opção |                 Opções                       |
+    ----------------------------------------------------
+|   1   |          Mostrar cardápio                    |
+|   2   |          Pedir um combo                      |
+|   3   |          Escolher apenas 1 item              |
+|   4   |          Ver carrinho                        |
+|   5   |          Finalizar pedido                    |
+|   6   |          Sair                                |
+--------------------------------------------------------
+
+''')
+        opcao = input("Escolha uma opção: ")
+
+        if opcao == '1':
+            limpar_tela()
+            mostrar_cardapio()
+
+        elif opcao == '2':
+            limpar_tela()
+            pedir_combo()
+
+        elif opcao == '3':
+            limpar_tela()
+            Pedir_itens()
+
+        elif opcao == '4':
+            ver_carrinho()
+
+        elif opcao == '5':
+            limpar_tela()
+            exibir_carrinho()
+            finalizar_pedido()
+            classificar_atendimento()
+            print("Agradecemos por utilizar o nosso serviço, volte sempre!!!")
+            break
+
+        elif opcao == '6':
+            limpar_tela()
+            print("\nObrigado por usar o programa!\n")
+            break
+        else:
+            limpar_tela()
+            print("Opção inválida. Tente novamente.\n")
+
+
+# Função para tela de ADMINISTRADOR
+def adm():
+    limpar_tela()
+    while True:
+        Logo()
+        print('''
+-------------------------------------------------------
+|                 PAINEL DE ADMINISTRAÇÃO             |
+-------------------------------------------------------
+| Opção |                  Descrição                  |
+-------------------------------------------------------
+|   1   |    Mostrar cardápio atual                   |
+|   2   |    Alterar um item do menu                  |
+|   3   |    Modificar ou adicionar combo             |
+|   4   |    Remover combo existente                  |
+|   5   |    Alterar Usuário administrador            |
+|   6   |    Alterar Senha de administrador           |
+|   7   |    Sair                                     |
+-------------------------------------------------------
+\n
+''')
+        opcao=input("ENTRE COM O NÚMERO DE UMA DAS OPÇÕES ACIMA: ")
+        if opcao == "1":
+            mostrar_cardapio()
+            input("")
+            adm()
+            return()
+        elif opcao == "2":
+            AltUnid()
+            return()
+        elif opcao == "3":
+            AltCombo()
+            return()
+        elif opcao == "4":
+            RemCombo()
+            return()
+        elif opcao == "5":
+            AltAdm()
+            return()
+        elif opcao == "6":
+            AltSenhaAdm()
+            return()
+        elif opcao == "7":
+            aut()
+            return()
+        else:
+            limpar_tela()
+            input("\nOpção inválida, tente novamente.")
 
 # Função para autenticação
 def aut():
@@ -79,7 +161,6 @@ Senha: ''')
                     elif senha == valores[1]:
                         limpar_tela()
                         return adm()
-
     else:
                 limpar_tela()
                 print(f'\nOlá, {usuario}! Bem vindo ao')
@@ -155,7 +236,7 @@ Digite 99 para cancelar: ''')
 def AltUnid():
     limpar_tela()
     print('''
-Aqui é possível alterar o nome e o preço dos itens disponíveis no menu "Montar Combo" dos clientes.
+Aqui é possível alterar o nome e o preço dos itens disponíveis no menu "Escolher apenas 1 item" dos clientes.
 As alterações são salvas automaticamente no arquivo "main.txt".
 ''')
     Exib = LoadTxt("[") # formata uma variável que receba os itens do .txt filtrados, apenas para exibir
@@ -244,55 +325,6 @@ def RemCombo():
                 input("Opção inválida, tente novamente.")
                 RemCombo()
                 return()
-            
-# Função para tela de ADMINISTRADOR
-def adm():
-    limpar_tela()
-    while True:
-        Logo()
-        print('''
--------------------------------------------------------
-|                 PAINEL DE ADMINISTRAÇÃO             |
--------------------------------------------------------
-| Opção |                  Descrição                  |
--------------------------------------------------------
-|   1   |    Mostrar cardápio atual                   |
-|   2   |    Alterar um item do menu                  |
-|   3   |    Modificar ou adicionar combo             |
-|   4   |    Remover combo existente                  |
-|   5   |    Alterar Usuário administrador            |
-|   6   |    Alterar Senha de administrador           |
-|   7   |    Sair                                     |
--------------------------------------------------------
-\n
-''')
-        opcao=input("ENTRE COM O NÚMERO DE UMA DAS OPÇÕES ACIMA: ")
-        if opcao == "1":
-            mostrar_cardapio()
-            input("")
-            adm()
-            return()
-        elif opcao == "2":
-            AltUnid()
-            return()
-        elif opcao == "3":
-            AltCombo()
-            return()
-        elif opcao == "4":
-            RemCombo()
-            return()
-        elif opcao == "5":
-            AltAdm()
-            return()
-        elif opcao == "6":
-            AltSenhaAdm()
-            return()
-        elif opcao == "7":
-            aut()
-            return()
-        else:
-            limpar_tela()
-            input("\nOpção inválida, tente novamente.")
 
 # Função para mostrar o cardápio inteiro
 def mostrar_cardapio():
@@ -322,7 +354,7 @@ def pedir_combo():
         print("Combo não encontrado.")
         main()
 
-#função exibir itens
+# Função para exibir itens
 def exibir_itens():
     limpar_tela()
     print(Fore.YELLOW + "ITENS DISPONÍVEIS\n" + Style.RESET_ALL)
@@ -365,7 +397,7 @@ def Pedir_itens():
     else:
         input('\nOpção inválida, pressione Enter para tentar novamente.')
 
-#FUNÇÃO PARA EXIBIR APENAS O CARRINHO
+# Função para exibir o carrinho
 def exibir_carrinho():
     limpar_tela()
     if not carrinho:
@@ -384,8 +416,7 @@ def exibir_carrinho():
           Style.RESET_ALL + f"R${total_carrinho:.2f}")
     i = input('')
 
-
-#FUNÇÃO PARA VER E DELETAR ALGO DO CARRINHO  
+# Função para ver e deletar algo do carrinho  
 def ver_carrinho():
     limpar_tela()
     if not carrinho:
@@ -433,14 +464,14 @@ def finalizar_pedido():
     sua comanda: {gerar_comanda()}
 ''' ) 
 
-#Função Gerar comanda
+# Função Gerar comanda
 def gerar_comanda():
     letras = string.ascii_uppercase  # Obtém todas as letras maiúsculas de A a Z
     numeros = string.digits  # Obtém todos os dígitos de 0 a 9
     Comanda = ''.join(random.choices(letras + numeros, k=5))  # Escolhe 5 caracteres aleatórios
     return Comanda
 
-#função limpar tela
+# Função limpar tela
 def limpar_tela():
     #Comando para ver qual sistema operacional está sendo utilizado
     sistema_operacional = os.name
@@ -475,58 +506,25 @@ def classificar_atendimento():
     else:
         print("opção inválida, escolha uma opção válida.")
 
-# Função principal
-def main():
-    while True:
-        Logo()
-        print('''
---------------------Sinta-se em casa.-------------------
+# Função para carregar dados do TXT
+def LoadTxt(tipo='todos'):
+    L0=[] # Lista que recebrá TXT
+    L1={} # DCT que receberá a lista
+    with open("main.txt",'r') as Dados:
+        for i in Dados:
+            if tipo == 'todos':
+                L0.append(i.strip().split(","))
+            elif tipo in i:
+                L0.append(i.strip().split(","))
+    for i in L0: # Tranforma lista em dicionario
+        L1[i[0]]=[i[1],i[2]]
+    return L1
 
-
- -------------------------------------------------------
-| Opção |                 Opções                       |
-    ----------------------------------------------------
-|   1   |          Mostrar cardápio                    |
-|   2   |          Pedir um combo                      |
-|   3   |          Montar seu próprio pedido           |
-|   4   |          Ver carrinho                        |
-|   5   |          Finalizar pedido                    |
-|   6   |          Sair                                |
---------------------------------------------------------
-
-''')
-        opcao = input("Escolha uma opção: ")
-
-        if opcao == '1':
-            limpar_tela()
-            mostrar_cardapio()
-
-        elif opcao == '2':
-            limpar_tela()
-            pedir_combo()
-
-        elif opcao == '3':
-            limpar_tela()
-            Pedir_itens()
-
-        elif opcao == '4':
-            ver_carrinho()
-
-        elif opcao == '5':
-            limpar_tela()
-            exibir_carrinho()
-            finalizar_pedido()
-            classificar_atendimento()
-            print("Agradecemos por utilizar o nosso serviço, volte sempre!!!")
-            break
-
-        elif opcao == '6':
-            limpar_tela()
-            print("\nObrigado por usar o programa!\n")
-            break
-        else:
-            limpar_tela()
-            print("Opção inválida. Tente novamente.\n")
+# Função para salvar TXT
+def SaveTxt(Dict):
+    with open("main.txt", 'w') as Dados:
+        for chave,dados in Dict.items():
+            Dados.write(f"{chave},{dados[0]},{dados[1]}\n")
 
 # Executar o programa
 aut()
