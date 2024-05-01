@@ -508,7 +508,7 @@ def main():
             print("Opção inválida. Tente novamente.\n")
 
 # Executar o programa
-aut()
+adicionar_em_txt()
 
 # Adicionando conteúdo em um arquivo
 def adicionar_em_txt(arquivo, conteudo):

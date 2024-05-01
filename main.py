@@ -433,7 +433,6 @@ def finalizar_pedido():
     sua comanda: {gerar_comanda()}
 ''' ) 
 
-
 #Função Gerar comanda
 def gerar_comanda():
     letras = string.ascii_uppercase  # Obtém todas as letras maiúsculas de A a Z
@@ -454,6 +453,27 @@ def limpar_tela():
     else: #Caso não seja identificado ele vai executar os dois comandos
         os.system('clear')
         os.system('cls')
+
+# classificar atendimento 
+def classificar_atendimento():
+    print("como classifca o atendimento?")
+    print("1. exclente")
+    print("2. bom")
+    print("3. regular")
+    print("4. ruim")
+
+    opcao = input("escolha uma das opções: ")
+
+    if opcao == '1':
+        print("voce classificou o atendimento como EXCLENTE!")
+    elif opcao == '2':
+        print("voce classificou o atendimento como BOM!")
+    elif opcao == '3':
+        print("voce classificou o atendimento como REGULAR!")
+    elif opcao == '4':
+        print("voce classificou o atendimento como RUIM! ")
+    else:
+        print("opção inválida, escolha uma opção válida.")
 
 # Função principal
 def main():
@@ -496,7 +516,8 @@ def main():
             limpar_tela()
             exibir_carrinho()
             finalizar_pedido()
-            print('''Agradecemos por utilizar o nosso serviço, Volte sempre !!! ''')
+            classificar_atendimento()
+            print("Agradecemos por utilizar o nosso serviço, volte sempre!!!")
             break
 
         elif opcao == '6':
@@ -509,4 +530,3 @@ def main():
 
 # Executar o programa
 aut()
-
