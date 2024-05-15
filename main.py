@@ -32,14 +32,6 @@ Y88b    / "  888-~\d888     888   | 888       d8b
     Y    888 888    "88__/   "8__/  888___/      Y88b
 ''')
 
-# Dicionário para armazenar os combos/lanches
-cardapio = {
-    "1": {'Nome': "Aspas",'Lanche':' Cheeseburger', 'Acompanhamento':' Batata frita pequena','Copo':' 200ml','preço': 39.90},
-    "2": {'Nome': "Águdo",'Lanche':' Frango', 'Acompanhamento':' Batata frita média','Copo':' 200ml','preço': 36.90},
-    "3": {'Nome': "Dois pontos",'Lanche':' Duplo Burger', 'Acompanhamento':' Batata frita média','Copo':' 200ml','preço': 49.90},
-    "4": {'Nome': "Virgula",'Lanche':' Duplo Burger', 'Acompanhamento':' Batata frita grande','Copo':' 600ml','preço': 59.90}
-}
-
 # Função principal de atendimento
 def main():
     while True:
@@ -106,12 +98,14 @@ def adm():
 | Opção |                  Descrição                  |
 -------------------------------------------------------
 |   1   |    Mostrar cardápio atual                   |
-|   2   |    Alterar um item do menu                  |
-|   3   |    Modificar ou adicionar combo             |
-|   4   |    Remover combo existente                  |
-|   5   |    Alterar Usuário administrador            |
-|   6   |    Alterar Senha de administrador           |
-|   7   |    Sair                                     |
+|   2   |    Mostrar itens do menu atual              |
+|   3   |    Alterar um item do menu                  |
+|   4   |    Adicionar combo                          |
+|   5   |    Alterar combo                            |
+|   6   |    Remover combo existente                  |
+|   7   |    Alterar Usuário administrador            |
+|   8   |    Alterar Senha de administrador           |
+|   9   |    Sair                                     |
 -------------------------------------------------------
 \n
 ''')
@@ -122,21 +116,27 @@ def adm():
             adm()
             return()
         elif opcao == "2":
-            AltUnid()
+            exibir_itens()
             return()
         elif opcao == "3":
-            AltCombo()
+            AltUnid()
             return()
         elif opcao == "4":
-            RemCombo()
+            adicionar_ao_cardapio()
             return()
         elif opcao == "5":
-            AltAdm()
+            alterar_do_Cardapio()
             return()
         elif opcao == "6":
-            AltSenhaAdm()
+            remover_Combo_cardapio()
             return()
         elif opcao == "7":
+            AltAdm()
+            return()
+        elif opcao == "8":
+            AltSenhaAdm()
+            return()
+        elif opcao == "9":
             aut()
             return()
         else:
@@ -265,105 +265,102 @@ As alterações são salvas automaticamente no arquivo "main.txt".
     else:
         input('\nOpção inválida, pressione Enter para tentar novamente.')
 
-# Funções para alterar ou adicionar combo do cardápio
-def AltCombo():
-    novoCombo = []
+#Carregar_cardapio
+def carregar_cardapio():
+    cardapio = {}
+    with open("cardapio.txt", "r") as file:
+        for line in file:
+            id, nome, lanche, acompanhamento, copo, preco = line.strip().split(",")
+            cardapio[id] = {'Nome': nome, 'Lanche': lanche, 'Acompanhamento': acompanhamento, 'Copo': copo, 'Preço': float(preco)}
+    return cardapio
+    
+
+#Mostrar cardapio
+def mostrar_cardapio():
+    cardapio = carregar_cardapio()
+    print(Fore.YELLOW + "CARDÁPIO\n" + Style.RESET_ALL)
+    headers = [Fore.GREEN + "ID", "Nome", "Lanche", "Acompanhamento", "Copo", "Preço" + Style.RESET_ALL]
+    table_data = []
+    for num, combo in cardapio.items():
+        row = [num, combo['Nome'], combo['Lanche'], combo['Acompanhamento'], combo['Copo'], f"R${combo['Preço']:.2f}"]
+        table_data.append(row)
+    print(tabulate(table_data, headers=headers, tablefmt="psql"))
+
+#Adicionar item ao cardapio
+def adicionar_ao_cardapio():
+    nome = input("Digite o nome do novo item: ")
+    lanche = input("Digite o nome do lanche: ")
+    acompanhamento = input("Digite o nome do acompanhamento: ")
+    copo = input("Digite o tamanho do copo: ")
+    preco = float(input("Digite o preço do item: "))
+    with open("cardapio.txt", "a") as file:
+        id = str(len(carregar_cardapio()) + 1)
+        file.write(f"{id},{nome},{lanche},{acompanhamento},{copo},{preco}\n")
+    print("Item adicionado ao cardápio!")
+    return adm()
+
+#Alterar combo do cardapio 
+def alterar_do_Cardapio():
     mostrar_cardapio()
-    chave = input("Digite uma posição existente para modificar ou Enter para adicionar um novo (digite 99 para sair): ")
-    if chave == "99":
-        adm()
-    elif chave.isdigit() and int(chave) <= len(cardapio): # checa se o novo combo vai sobrescrever ou adicionar na lista
-        print(''' 
+    id = input("Digite o ID do item que deseja alterar: ")
+    if id in carregar_cardapio():
+        nome = input("Digite o novo nome do item: ")
+        lanche = input("Digite o novo nome do lanche: ")
+        acompanhamento = input("Digite o novo nome do acompanhamento: ")
+        copo = input("Digite o novo tamanho do copo: ")
+        preco = float(input("Digite o novo preço do item: "))
+        cardapio = carregar_cardapio()
+        cardapio[id] = {'Nome': nome, 'Lanche': lanche, 'Acompanhamento': acompanhamento, 'Copo': copo, 'Preço': preco}
+        with open("cardapio.txt", "w") as file:
+            for id, combo in cardapio.items():
+                file.write(f"{id},{combo['Nome']},{combo['Lanche']},{combo['Acompanhamento']},{combo['Copo']},{combo['Preço']}\n")
+        print("Item alterado com sucesso!")
+    else:
+        print("ID de item inválido!")
+        return adm()
+
+#Remover Combo do cardapio
+def remover_Combo_cardapio():
+    mostrar_cardapio()
+    id = input("Digite o ID do item que deseja remover: ")
+    if id in carregar_cardapio():
+        opt= input(''' 
 -------------------------------------------------------
-|   1   |    SIM                                      |
+|   1   |    Deseja remover o combo: {id}             |
 |   2   |    Voltar ao menu                           |
 -------------------------------------------------------
 ''')
-        opt=input(f"Deseja sobrescrever o combo da posição {chave}?: ")
-        if opt == "2":
-            AltCombo()
-        elif opt == "1":
-            modCombo = Alteracoes() # carrega a função com todas as perguntas necessárias para sobresvrever o combo
-            cardapio[chave] = modCombo # variável [chave] foi a escolha do usuário
-            input("Combo modificado com sucesso!")
-            AltCombo()
-    elif chave == "":
-        chave = str(len(cardapio) + 1) # variável [chave] ganha nova index para ser adicionada ao final do cardápio
-        addCombo = Alteracoes() # carrega a função com todas as perguntas necessárias para sobresvrever o combo
-        cardapio[chave] = addCombo
-        input("Novo combo adicionado com sucesso!")
-        limpar_tela()
-        AltCombo()
-    elif not chave.isdigit() or int(chave) > len(cardapio): # checa se a entrada para variável [chave] é uma opção válida
-        input("Comando inválido, tente novamente.")
-        AltCombo()
-    
-def Alteracoes(): # formata um novo dicionário para adicionar linha ao cardápio
-    nome = input("\nAdicione o nome do novo combo: ")
-    lanche = input("Adicione o lanche: ")
-    acomp = input("Agora adicione o acompanhamento: ")
-    copo = input("Adicione o tamanho do copo oferecido: ")
-    preco = float(input("Por último, adicione o preço do novo combo: "))
-    novoCombo = {'Nome': nome,'Lanche': lanche,'Acompanhamento': acomp,'Copo': copo,'preço': preco}
-    return novoCombo 
+        if opt == "1":
+            cardapio = carregar_cardapio()
+            del cardapio[id]
+            with open("cardapio.txt", "w") as file:
+                for id, combo in cardapio.items():
+                    file.write(f"{id},{combo['Nome']},{combo['Lanche']},{combo['Acompanhamento']},{combo['Copo']},{combo['Preço']}\n")
+            print("Item removido com sucesso!")
+        elif opt == "2":
+            print("Operação cancelada.")
+        else:
+            print("Opção inválida! Operação cancelada.")
+    else:
+        print("ID de item inválido!")
+        return adm()
 
-# Função para remover combo do cardápio
-def RemCombo():
-    listaChaves = list(cardapio.keys()) # armazena em lista as chaves que existem no cardápio 
-    mostrar_cardapio()
-    escolha = input("\nQual combo gostaria de deletar? (digite 99 para sair): ")
-    if escolha == "99":
-        adm()
-        return()
-    for chave,itens in cardapio.items():
-        for nome,valor in itens.items():
-            if escolha.isdigit() and int(escolha) <= len(cardapio): # checa se escolha é válido e se está no cardápio
-                escolha = str(escolha)
-                if escolha in cardapio:
-                    del cardapio[escolha]
-                    novoCardapio = {} # cria um cardápio vazio para sobrescrever, para que todas as chaves sejam renomeadas corretamente
-                    novaChave = 1 # começa a contagem das chaves do novo cardápio em 1
-                    for chave in listaChaves: # varre as chaves do cardápio antigo para armazenar as novas corretamente
-                        if chave in cardapio: # checa quantas chaves serão necessárias levando em conta que 1 item foi exluído, começando do 1
-                            novoCardapio[str(novaChave)] = cardapio[chave] # novo cardápio recebe os combos do antigo cardápio e registra nova chave para eles
-                            novaChave += 1 # adiciona 1 para chave, para listagem crescente correta
-                    input("Removido com sucesso!")
-                    cardapio.clear() # limpa o cardápio antigo
-                    cardapio.update(novoCardapio) # atualiza o cardápio com o novo
-                    RemCombo()
-                    return()
-            elif not escolha.isdigit() or int(escolha) > len(cardapio): # checa se a opção digitada está no cardápio e se é valida
-                limpar_tela()
-                input("Opção inválida, tente novamente.")
-                RemCombo()
-                return()
-
-# Função para mostrar o cardápio inteiro
-def mostrar_cardapio():
-    limpar_tela()
-    print(Fore.YELLOW + "CARDÁPIO\n" + Style.RESET_ALL)
-    headers = [Fore.GREEN + "ID", "Nome", "Lanche",
-               "Acompanhamento", "Copo", "Preço" + Style.RESET_ALL]
-    table_data = []
-    for num, combo in cardapio.items():
-        row = [num, combo['Nome'], combo['Lanche'],
-               combo['Acompanhamento'], combo['Copo'], f"R${combo['preço']:.2f}"]
-        table_data.append(row)
-    print(tabulate(table_data, headers=headers, tablefmt="psql"))
 
 # Função para pedir um combo do cardápio
 def pedir_combo():
     limpar_tela()
+    cardapio = carregar_cardapio()
     mostrar_cardapio()
     escolha = input("Escolha um combo (ex: 1): ")
     if escolha in cardapio:
-        carrinho.append((cardapio[escolha]['Nome'], cardapio[escolha]['preço']))
+        carrinho.append((cardapio[escolha]['Nome'], cardapio[escolha]['Preço']))
         print('\n')
         print(Fore.LIGHTYELLOW_EX + "Combo adicionado ao carrinho!! " + Style.RESET_ALL)
-        print(f"\n{cardapio[escolha]['Nome']} - R${cardapio[escolha]['preço']:.2f} adicionado ao carrinho.")
-        i = input("")
+        print(f"\n{cardapio[escolha]['Nome']} - R${cardapio[escolha]['Preço']:.2f} adicionado ao carrinho.")
+        input("")
     else:
         print("Combo não encontrado.")
+        input("")
         main()
 
 # Função para exibir itens
