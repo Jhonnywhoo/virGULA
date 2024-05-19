@@ -2,7 +2,6 @@
 Trabalho MINI-CRUD a pedido do Professor Luiz.
 
 Nosso CRUD propõe criar uma ferramenta de gestão e atendimento para um restaurante fast-food baseado em cardápio de combos.
-O cardápio principal utiliza funções de dicionário Python, enquanto os itens vendidos separadamente e o login administrativo funcionam em arquivo ".txt".
 
 Jhonny Wendel Oliveira de Brito - 1D ADS
 Gustavo de Freitas Andrade - 1D ADS
@@ -12,7 +11,6 @@ Alex Michel Facciolla da Silva - 1D ADS
 
 import os
 import pwinput
-import locale
 import random
 import string
 from tabulate import tabulate
@@ -71,9 +69,7 @@ def main():
 
         elif opcao == '5':
             limpar_tela()
-            exibir_carrinho()
             finalizar_pedido()
-            classificar_atendimento()
             print("Agradecemos por utilizar o nosso serviço, volte sempre!!!")
             break
 
@@ -221,6 +217,24 @@ def AltSenhaAdm():
             return adm()
 
 # Funções para alterar preço de unidade do montar pedido
+def AltUnid():
+    limpar_tela()
+    print('''
+Aqui é possível alterar o nome e o preço dos itens disponíveis no menu "Escolher apenas 1 item" dos clientes.
+As alterações são salvas automaticamente no arquivo "main.txt".
+''')
+    Exib = LoadTxt("[") # formata uma variável que receba os itens do .txt filtrados, apenas para exibir
+    exibir_itens()
+
+    Alt = LoadTxt()
+    opt = input('Digite o número do item que gostaria de alterar (digite 99 para sair): ')
+    if opt == "99":
+        return adm()
+    elif opt.isdigit() and int(opt) <= len(Exib): # filtro para a escolha ser dígito e estar na length no cardápio
+        alterar_item(list(Exib.keys())[int(opt) - 1], Alt) # carrega a outra função já com parmetros de lista, excluir primeira linha e variável Alt
+    else:
+        input('\nOpção inválida, pressione Enter para tentar novamente.')
+
 def alterar_item(item, Alt):
     limpar_tela()
     print(f'{item}:\n')
@@ -245,26 +259,6 @@ Digite 99 para cancelar: ''')
     input("\nSalvo!")
     return AltUnid()
 
-def AltUnid():
-    limpar_tela()
-    print('''
-Aqui é possível alterar o nome e o preço dos itens disponíveis no menu "Escolher apenas 1 item" dos clientes.
-As alterações são salvas automaticamente no arquivo "main.txt".
-''')
-    Exib = LoadTxt("[") # formata uma variável que receba os itens do .txt filtrados, apenas para exibir
-    for item, tipo in Exib.items():
-        print(item, tipo[0])
-        print('R$', tipo[1], '\n')
-
-    Alt = LoadTxt()
-    opt = input('Digite o número do item que gostaria de alterar (digite 99 para sair): ')
-    if opt == "99":
-        return ()
-    elif opt.isdigit() and int(opt) <= len(Exib): # filtro para a escolha ser dígito e estar na length no cardápio
-        alterar_item(list(Exib.keys())[int(opt) - 1], Alt) # carrega a outra função já com parmetros de lista, excluir primeira linha e variável Alt
-    else:
-        input('\nOpção inválida, pressione Enter para tentar novamente.')
-
 #Carregar_cardapio
 def carregar_cardapio():
     cardapio = {}
@@ -282,7 +276,8 @@ def mostrar_cardapio():
     headers = [Fore.GREEN + "ID", "Nome", "Lanche", "Acompanhamento", "Copo", "Preço" + Style.RESET_ALL]
     table_data = []
     for num, combo in cardapio.items():
-        row = [num, combo['Nome'], combo['Lanche'], combo['Acompanhamento'], combo['Copo'], f"R${combo['Preço']:.2f}"]
+        a=combo['Preço']
+        row = [num, combo['Nome'], combo['Lanche'], combo['Acompanhamento'], combo['Copo'], f"R${FormatReal(a)}"]
         table_data.append(row)
     print(tabulate(table_data, headers=headers, tablefmt="psql"))
 
@@ -317,7 +312,7 @@ def alterar_do_Cardapio():
         print("Item alterado com sucesso!")
     else:
         print("ID de item inválido!")
-        return adm()
+    return adm()
 
 #Remover Combo do cardapio
 def remover_Combo_cardapio():
@@ -343,7 +338,7 @@ def remover_Combo_cardapio():
             print("Opção inválida! Operação cancelada.")
     else:
         print("ID de item inválido!")
-        return adm()
+    return adm()
 
 
 # Função para pedir um combo do cardápio
@@ -354,14 +349,15 @@ def pedir_combo():
     escolha = input("Escolha um combo (ex: 1): ")
     if escolha in cardapio:
         carrinho.append((cardapio[escolha]['Nome'], cardapio[escolha]['Preço']))
+        preco=cardapio[escolha]['Preço']
         print('\n')
         print(Fore.LIGHTYELLOW_EX + "Combo adicionado ao carrinho!! " + Style.RESET_ALL)
-        print(f"\n{cardapio[escolha]['Nome']} - R${cardapio[escolha]['Preço']:.2f} adicionado ao carrinho.")
+        print(f"\n{cardapio[escolha]['Nome']} - R${FormatReal(preco)} adicionado ao carrinho.")
         input("")
     else:
         print("Combo não encontrado.")
         input("")
-        main()
+    return()
 
 # Função para exibir itens
 def exibir_itens():
@@ -371,7 +367,8 @@ def exibir_itens():
     table_data = []
     Exib = LoadTxt("[")
     for item, tipo in Exib.items():
-        row = [item, tipo[0], Fore.GREEN + f"R${tipo[1]}" + Style.RESET_ALL]
+        preco=tipo[1]
+        row = [item, tipo[0], Fore.GREEN + f"R${FormatReal(preco)}" + Style.RESET_ALL]
         table_data.append(row)
     print(tabulate(table_data, headers=headers, tablefmt="psql"))
 
@@ -385,6 +382,7 @@ def Pedir_itens():
     opt = input(Fore.CYAN +
             '\n Digite o número do item que gostaria de Adicionar ao seu carrinho (digite 99 para sair): ' + Style.RESET_ALL)
     if opt == "99":
+            limpar_tela()
             return
     elif opt.isdigit() and 1 <= int(opt) <= len(Exib):
         item_index = int(opt) - 1
@@ -398,8 +396,7 @@ def Pedir_itens():
         headers = [ "Número", "Item", "Preço"]
         table_data = []
         Exib = LoadTxt("[")
-
-        row = f"{item_escolha}", f"{nome_item}", Fore.GREEN + f"R${valor_item}" + Style.RESET_ALL
+        row = f"{item_escolha}", f"{nome_item}", Fore.GREEN + f"R${FormatReal(valor_item)}" + Style.RESET_ALL
         table_data.append(row)
         print(tabulate(table_data, headers=headers, tablefmt="psql"))
         i = input("")
@@ -417,13 +414,12 @@ def exibir_carrinho():
     table_data = []
     total_carrinho = 0
     for nome_lanche, valor_lanche in carrinho:
-        row = [nome_lanche, f"R${valor_lanche}"]
+        row = [nome_lanche, f"R${FormatReal(valor_lanche)}"]
         table_data.append(row)
         total_carrinho += float(valor_lanche)
     print(tabulate(table_data, headers=headers, tablefmt="psql"))
     print("\n" + Fore.YELLOW + "Valor Total do Carrinho: " +
-          Style.RESET_ALL + f"R${total_carrinho:.2f}")
-    i = input('')
+          Style.RESET_ALL + f"R${FormatReal(total_carrinho)}")
 
 # Função para ver e deletar algo do carrinho  
 def ver_carrinho():
@@ -436,13 +432,13 @@ def ver_carrinho():
     table_data = []
     total_carrinho = 0
     for nome_lanche, valor_lanche in carrinho:
-        row = [nome_lanche, f"R${valor_lanche}"]
+        row = [nome_lanche, f"R${FormatReal(valor_lanche)}"]
         table_data.append(row)
         total_carrinho += float(valor_lanche)
     print(tabulate(table_data, headers=headers, tablefmt="psql"))
     print("\n" + Fore.YELLOW + "Valor Total do Carrinho: " +
-          Style.RESET_ALL + f"R${total_carrinho:.2f}")
-    i = input('')
+          Style.RESET_ALL + f"R${FormatReal(total_carrinho)}")
+    
     print(''' 
 -------------------------------------------------------
 | Opção |                   Descrição                 |
@@ -471,7 +467,8 @@ def finalizar_pedido():
     print(f''' 
     Sua compra foi finalizada
     sua comanda: {gerar_comanda()}
-''' ) 
+''' )
+    input("Pressione Enter")
 
 # Função Gerar comanda
 def gerar_comanda():
@@ -493,28 +490,7 @@ def limpar_tela():
     else: #Caso não seja identificado ele vai executar os dois comandos
         os.system('clear')
         os.system('cls')
-
-# classificar atendimento 
-def classificar_atendimento():
-    print("como classifca o atendimento?")
-    print("1. exclente")
-    print("2. bom")
-    print("3. regular")
-    print("4. ruim")
-
-    opcao = input("escolha uma das opções: ")
-
-    if opcao == '1':
-        print("voce classificou o atendimento como EXCLENTE!")
-    elif opcao == '2':
-        print("voce classificou o atendimento como BOM!")
-    elif opcao == '3':
-        print("voce classificou o atendimento como REGULAR!")
-    elif opcao == '4':
-        print("voce classificou o atendimento como RUIM! ")
-    else:
-        print("opção inválida, escolha uma opção válida.")
-
+    
 # Função para carregar dados do TXT
 def LoadTxt(tipo='todos'):
     L0=[] # Lista que recebrá TXT
@@ -534,6 +510,13 @@ def SaveTxt(Dict):
     with open("main.txt", 'w') as Dados:
         for chave,dados in Dict.items():
             Dados.write(f"{chave},{dados[0]},{dados[1]}\n")
+
+# Função para fornatar moeda
+def FormatReal(my_value):
+    a = '{:,.2f}'.format(float(my_value))
+    b = a.replace(',','v')
+    c = b.replace('.',',')
+    return c.replace('v','.')
 
 # Executar o programa
 aut()
