@@ -1,13 +1,12 @@
-login,admin,1234
-[1] Lanche:,Cheeseburger,19.90
-[2] Lanche:,Frango,14.90
-[3] Lanche:,Duplo Burger,25.90
-[4] Copo de Refrigerante:,Copo.200ml,4.90
-[5] Copo de Refrigerante:,Copo.400ml,8.90
-[6] Garrafa de Refrigerante:,garrafa.600ml,12.90
-[7] Batata:,B.pequena,5.90
-[8] Batata:,B;media,8.90
-[9] Batata:,B.grande,11.90
-[10] Sobremesa:,Milk-shake,15.90
-[11] Sobremesa:,Petit-Gateau,10.90
-[12] Sobremesa:,casquinha,6.90
+1,Lanche: Cheeseburger,19.90
+2,Lanche: Frango,13.90
+3,Lanche: Duplo Burger,25.90
+4,Copo de Refrigerante: 200ml,4.90
+5,Copo de Refrigerante: 400ml,8.90
+6, Garrafa de Refrigerante: 600ml,12.90
+7,Batata pequena,5.90
+8,Batata média,8.90
+9,Batata grande,11.90
+10,Milk-shake,14.90
+11,Petit-Gateau,10.90
+12,Casquinha,6.90

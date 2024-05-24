@@ -113,6 +113,8 @@ def adm():
             return()
         elif opcao == "2":
             exibir_itens()
+            input("Enter para voltar")
+            adm()
             return()
         elif opcao == "3":
             AltUnid()
@@ -148,7 +150,7 @@ BEM VINDO!
 Nome: ''')
     if usuario == "fechar":
         return()
-    Login = LoadTxt() # Carrega os dados dentro da função aut
+    Login = LoadTxtL() # Carrega os dados dentro da função aut
     for login,valores in Login.items():
         if usuario == valores[0]:
             senha = pwinput.pwinput(prompt='''
@@ -177,7 +179,7 @@ Senha: ''')
 # Função para alterar usuário
 def AltAdm():
     limpar_tela()
-    Login = LoadTxt()
+    Login = LoadTxtL()
     usuario_teste=input("Digite o usuário administrador atual: ")
     for login,dados in Login.items():
         while usuario_teste not in dados[0]:
@@ -190,14 +192,14 @@ def AltAdm():
             while '.' in usuario_novo: # para evitar conflitos no .txt
                 input("O usuário não pode conter ponto(.), tente novamente: ")
             Login["login"]=[usuario_novo,dados[1]]
-            SaveTxt(Login)
+            SaveTxtL(Login)
             input("\nSalvo com sucesso! Pressione enter para continuar")
             return adm()
 
 # Função para alterar senha de administrador
 def AltSenhaAdm():
     limpar_tela()
-    Login = LoadTxt()
+    Login = LoadTxtL()
     senha_teste = input("Digite a senha atual: ")
     for login,dados in Login.items():
         while senha_teste not in dados[1]:
@@ -212,7 +214,7 @@ def AltSenhaAdm():
             while '.' in nova_senha: # Para evitar conflitos no .txt
                 nova_senha = input("A senha não pode conter ponto(.), tente novamente: ")
             Login["login"]=[dados[0],nova_senha]
-            SaveTxt(Login)
+            SaveTxtL(Login)
             input("\nSalvo com sucesso! Pressione enter para continuar")
             return adm()
 
@@ -223,26 +225,30 @@ def AltUnid():
 Aqui é possível alterar o nome e o preço dos itens disponíveis no menu "Escolher apenas 1 item" dos clientes.
 As alterações são salvas automaticamente no arquivo "main.txt".
 ''')
-    Exib = LoadTxt("[") # formata uma variável que receba os itens do .txt filtrados, apenas para exibir
     exibir_itens()
-
     Alt = LoadTxt()
     opt = input('Digite o número do item que gostaria de alterar (digite 99 para sair): ')
     if opt == "99":
         return adm()
-    elif opt.isdigit() and int(opt) <= len(Exib): # filtro para a escolha ser dígito e estar na length no cardápio
-        alterar_item(list(Exib.keys())[int(opt) - 1], Alt) # carrega a outra função já com parmetros de lista, excluir primeira linha e variável Alt
+    elif opt.isdigit() and int(opt) <= len(Alt): # filtro para a escolha ser dígito e estar na length no cardápio
+        alterar_item(list(Alt.keys())[int(opt) - 1], Alt) # carrega a outra função já com parmetros de lista, excluir primeira linha e variável Alt
     else:
         input('\nOpção inválida, pressione Enter para tentar novamente.')
 
 def alterar_item(item, Alt):
     limpar_tela()
-    print(f'{item}:\n')
-    print('[1]', Alt[item][0])
-    print('[2]', Alt[item][1])
+    print(f''' 
+
+{item}:
+------------------------------------------------
+|   1   |  {Alt[item][0]}                            
+|   2   |  {Alt[item][1]}                            
+------------------------------------------------
+''')
     alteracao = input('\nDigite o número do que gostaria de alterar (Digite 99 para cancelar): ')
     if alteracao == "99":
-        return
+        AltUnid()
+        return()
     elif alteracao == "1":
         nome = input(f"\nDigite o novo nome que gostaria de registrar para {item} (Digite 99 para cancelar): ")
         if nome == "99":
@@ -267,7 +273,6 @@ def carregar_cardapio():
             id, nome, lanche, acompanhamento, copo, preco = line.strip().split(",")
             cardapio[id] = {'Nome': nome, 'Lanche': lanche, 'Acompanhamento': acompanhamento, 'Copo': copo, 'Preço': float(preco)}
     return cardapio
-    
 
 #Mostrar cardapio
 def mostrar_cardapio():
@@ -365,8 +370,8 @@ def exibir_itens():
     print(Fore.YELLOW + "ITENS DISPONÍVEIS\n" + Style.RESET_ALL)
     headers = [Fore.LIGHTMAGENTA_EX + "Número", "Item", "Preço" + Style.RESET_ALL ]
     table_data = []
-    Exib = LoadTxt("[")
-    for item, tipo in Exib.items():
+    Alt = LoadTxt()
+    for item, tipo in Alt.items():
         preco=tipo[1]
         row = [item, tipo[0], Fore.GREEN + f"R${FormatReal(preco)}" + Style.RESET_ALL]
         table_data.append(row)
@@ -376,7 +381,7 @@ def exibir_itens():
 def Pedir_itens():
     limpar_tela()
     print("Menu de itens Disponiveis")
-    Exib = LoadTxt("[")
+    Alt = LoadTxt()
     exibir_itens()
 
     opt = input(Fore.CYAN +
@@ -384,18 +389,18 @@ def Pedir_itens():
     if opt == "99":
             limpar_tela()
             return
-    elif opt.isdigit() and 1 <= int(opt) <= len(Exib):
+    elif opt.isdigit() and 1 <= int(opt) <= len(Alt):
         item_index = int(opt) - 1
-        item_escolha = list(Exib.keys())[item_index]
-        nome_item = Exib[item_escolha][0]
-        valor_item = Exib[item_escolha][1]
+        item_escolha = list(Alt.keys())[item_index]
+        nome_item = Alt[item_escolha][0]
+        valor_item = Alt[item_escolha][1]
         carrinho.append((nome_item, valor_item))
         print('\n')
         print(Fore.LIGHTYELLOW_EX + "Seu pedido foi adicionado ao carrinho!! "+ Style.RESET_ALL)
 
         headers = [ "Número", "Item", "Preço"]
         table_data = []
-        Exib = LoadTxt("[")
+        Alt = LoadTxt()
         row = f"{item_escolha}", f"{nome_item}", Fore.GREEN + f"R${FormatReal(valor_item)}" + Style.RESET_ALL
         table_data.append(row)
         print(tabulate(table_data, headers=headers, tablefmt="psql"))
@@ -504,10 +509,28 @@ def LoadTxt(tipo='todos'):
     for i in L0: # Tranforma lista em dicionario
         L1[i[0]]=[i[1],i[2]]
     return L1
+    
+def LoadTxtL(tipo='todos'):
+    L0=[] # Lista que recebrá TXT
+    L1={} # DCT que receberá a lista
+    with open("login.txt",'r') as Dados:
+        for i in Dados:
+            if tipo == 'todos':
+                L0.append(i.strip().split(","))
+            elif tipo in i:
+                L0.append(i.strip().split(","))
+    for i in L0: # Tranforma lista em dicionario
+        L1[i[0]]=[i[1],i[2]]
+    return L1
 
 # Função para salvar TXT
 def SaveTxt(Dict):
     with open("main.txt", 'w') as Dados:
+        for chave,dados in Dict.items():
+            Dados.write(f"{chave},{dados[0]},{dados[1]}\n")
+
+def SaveTxtL(Dict):
+    with open("login.txt", 'w') as Dados:
         for chave,dados in Dict.items():
             Dados.write(f"{chave},{dados[0]},{dados[1]}\n")
 
