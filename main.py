@@ -154,9 +154,9 @@ Nome: ''')
     for login,valores in Login.items():
         if usuario == valores[0]:
             senha = pwinput.pwinput(prompt='''
-ADMINISTRADOR (Digite 99 para sair)
+ADMINISTRADOR (Digite FIM para sair)
 Senha: ''')
-            if senha == "99":
+            if senha.lower() == "fim":
                 return aut()
             elif senha == valores[1]:
                 return adm()
@@ -164,9 +164,9 @@ Senha: ''')
                 while senha not in valores[1]:
                     limpar_tela()
                     senha = pwinput.pwinput(prompt='''
-SENHA INCORRETA (digite 99 para sair)
+SENHA INCORRETA (digite FIM para sair)
 Senha: ''')
-                    if senha == "99":
+                    if senha.lower() == "FIM":
                         return aut()
                     elif senha == valores[1]:
                         limpar_tela()
@@ -183,9 +183,9 @@ def AltAdm():
     usuario_teste=input("Digite o usuário administrador atual: ")
     for login,dados in Login.items():
         while usuario_teste not in dados[0]:
-            print("\nUsuário administrador incorreto, tente novamente (digite 99 para cancelar).")
+            print("\nUsuário administrador incorreto, tente novamente (digite FIM para cancelar).")
             usuario_teste=input("\nDigite o usuário administrador atual: ")
-            if usuario_teste == "99":
+            if usuario_teste.lower() == "fim":
                 return adm()
         if usuario_teste == dados[0]:
             usuario_novo = input("Digite o novo usuário administrador: ")
@@ -204,10 +204,10 @@ def AltSenhaAdm():
     for login,dados in Login.items():
         while senha_teste not in dados[1]:
             limpar_tela()
-            print("Senha incorreta, tente novamente. (digite 99 para sair).\n")
+            print("Senha incorreta, tente novamente. (digite FIM para sair).\n")
             senha_teste = input("Digite a senha atual: ")
-            if senha_teste == "99":
-                return aut()
+            if senha_teste.lower() == "FIM":
+                return adm()
         if senha_teste in dados[1]:
             limpar_tela()
             nova_senha = input("Digite a nova senha: ")
@@ -227,8 +227,8 @@ As alterações são salvas automaticamente no arquivo "main.txt".
 ''')
     exibir_itens()
     Alt = LoadTxt()
-    opt = input('Digite o número do item que gostaria de alterar (digite 99 para sair): ')
-    if opt == "99":
+    opt = input('Digite o número do item que gostaria de alterar (digite FIM para sair): ')
+    if opt.lower() == "fim":
         return adm()
     elif opt.isdigit() and int(opt) <= len(Alt): # filtro para a escolha ser dígito e estar na length no cardápio
         alterar_item(list(Alt.keys())[int(opt) - 1], Alt) # carrega a outra função já com parmetros de lista, excluir primeira linha e variável Alt
@@ -237,29 +237,35 @@ As alterações são salvas automaticamente no arquivo "main.txt".
 
 def alterar_item(item, Alt):
     limpar_tela()
+    precoatt=float(Alt[item][1])
     print(f''' 
-
 {item}:
-------------------------------------------------
-|   1   |  {Alt[item][0]}                            
-|   2   |  {Alt[item][1]}                            
-------------------------------------------------
+--------------------------------------------
+   1   |  {Alt[item][0]}                            
+   2   |  R${FormatReal(precoatt)}                            
+--------------------------------------------
 ''')
-    alteracao = input('\nDigite o número do que gostaria de alterar (Digite 99 para cancelar): ')
-    if alteracao == "99":
+    alteracao = input('\nDigite o número do que gostaria de alterar (Digite FIM para cancelar): ')
+    if alteracao.lower() == "fim":
         AltUnid()
         return()
     elif alteracao == "1":
-        nome = input(f"\nDigite o novo nome que gostaria de registrar para {item} (Digite 99 para cancelar): ")
-        if nome == "99":
+        nome = input(f"\nDigite o novo nome que gostaria de registrar para {item} (Digite FIM para cancelar): ")
+        if nome.lower() == "fim":
             return AltUnid()
         Alt[item][0] = nome
     elif alteracao == "2":
         preco = input('''\nDigite o novo preço que gostaria de registrar
 (sem cifrão, apenas número e ponto)
-Digite 99 para cancelar: ''')
-        if preco == "99":
+Digite FIM para cancelar: ''')
+        if preco.lower() == "fim":
             return AltUnid()
+        while not preco.isdigit():
+            preco = input('''\nPREÇO INVÁLIDO.
+Digite o novo preço que gostaria de registrar (sem cifrão, apenas número e ponto)
+Digite FIM para cancelar: ''')
+            if preco.lower() == "fim":
+                return AltUnid()
         Alt[item][1] = preco
     SaveTxt(Alt)
     input("\nSalvo!")
@@ -293,6 +299,8 @@ def adicionar_ao_cardapio():
     acompanhamento = input("Digite o nome do acompanhamento: ")
     copo = input("Digite o tamanho do copo: ")
     preco = float(input("Digite o preço do item: "))
+    while not preco.isdigit():
+        preco = float(input("PREÇO INVÁLIDO, tente novamente: "))
     with open("cardapio.txt", "a") as file:
         id = str(len(carregar_cardapio()) + 1)
         file.write(f"{id},{nome},{lanche},{acompanhamento},{copo},{preco}\n")
@@ -309,6 +317,8 @@ def alterar_do_Cardapio():
         acompanhamento = input("Digite o novo nome do acompanhamento: ")
         copo = input("Digite o novo tamanho do copo: ")
         preco = float(input("Digite o novo preço do item: "))
+        while not preco.isdigit():
+            preco = float(input("PREÇO INVÁLIDO. Digite o novo preço do item: "))
         cardapio = carregar_cardapio()
         cardapio[id] = {'Nome': nome, 'Lanche': lanche, 'Acompanhamento': acompanhamento, 'Copo': copo, 'Preço': preco}
         with open("cardapio.txt", "w") as file:
@@ -385,10 +395,10 @@ def Pedir_itens():
     exibir_itens()
 
     opt = input(Fore.CYAN +
-            '\n Digite o número do item que gostaria de Adicionar ao seu carrinho (digite 99 para sair): ' + Style.RESET_ALL)
-    if opt == "99":
-            limpar_tela()
-            return
+            '\n Digite o número do item que gostaria de Adicionar ao seu carrinho (digite FIM para sair): ' + Style.RESET_ALL)
+    if opt.lower() == "fim":
+        limpar_tela()
+        return
     elif opt.isdigit() and 1 <= int(opt) <= len(Alt):
         item_index = int(opt) - 1
         item_escolha = list(Alt.keys())[item_index]
@@ -454,8 +464,8 @@ def ver_carrinho():
 ''')
     opçao = input("Digite a opçao que deseja escolher: ")
     if opçao == "1":
-        opt = input("\nDigite o número do item que deseja remover (digite 99 para sair): ")
-        if opt == "99":
+        opt = input("\nDigite o número do item que deseja remover (digite FIM para sair): ")
+        if opt.lower() == "fim":
             return
         elif opt.isdigit() and 1 <= int(opt) <= len(carrinho):
             item_index = int(opt) - 1
@@ -523,6 +533,19 @@ def LoadTxtL(tipo='todos'):
         L1[i[0]]=[i[1],i[2]]
     return L1
 
+def LoadTxtC(tipo='todos'):
+    L0=[] # Lista que recebrá TXT
+    L1={} # DCT que receberá a lista
+    with open("login.txt",'r') as Dados:
+        for i in Dados:
+            if tipo == 'todos':
+                L0.append(i.strip().split(","))
+            elif tipo in i:
+                L0.append(i.strip().split(","))
+    for i in L0: # Tranforma lista em dicionario
+        L1[i[0]]=[i[1],i[2]]
+    return L1
+
 # Função para salvar TXT
 def SaveTxt(Dict):
     with open("main.txt", 'w') as Dados:
@@ -530,6 +553,11 @@ def SaveTxt(Dict):
             Dados.write(f"{chave},{dados[0]},{dados[1]}\n")
 
 def SaveTxtL(Dict):
+    with open("login.txt", 'w') as Dados:
+        for chave,dados in Dict.items():
+            Dados.write(f"{chave},{dados[0]},{dados[1]}\n")
+            
+def SaveTxtC(Dict):
     with open("login.txt", 'w') as Dados:
         for chave,dados in Dict.items():
             Dados.write(f"{chave},{dados[0]},{dados[1]}\n")
