@@ -1,1 +1,2 @@
-1,Chaves,Frango,Nuggets,400ml,40.0
+1,Chaves,Frango,Nuggets,400ml,19.0
+2,Aspas,Carne,Batata,400ml,29.9

@@ -1,5 +1,5 @@
 1,Lanche: Cheeseburger,19.90
-2,Lanche: Frango,13.90
+2,Lanche: Frango,21.99
 3,Lanche: Duplo Burger,25.90
 4,Copo de Refrigerante: 200ml,4.90
 5,Copo de Refrigerante: 400ml,8.90
@@ -10,3 +10,4 @@
 10,Milk-shake,14.90
 11,Petit-Gateau,10.90
 12,Casquinha,6.90
+13,Cookie,5.90

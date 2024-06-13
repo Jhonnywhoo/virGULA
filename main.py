@@ -1,7 +1,7 @@
 '''
 Trabalho MINI-CRUD a pedido do Professor Luiz.
 
-Nosso CRUD propõe criar uma ferramenta de gestão e atendimento para um restaurante fast-food baseado em cardápio de combos.
+Nosso CRUD propõe criar uma ferramenta de gestão e atendimento para um restaurante fast-food baseado em cardápio de combos e alguns itens.
 
 Jhonny Wendel Oliveira de Brito - 1D ADS
 Gustavo de Freitas Andrade - 1D ADS
@@ -16,7 +16,6 @@ import string
 from tabulate import tabulate
 from colorama import Fore, Style
 
-# Programa para uma empresa de fast food
 carrinho = []
 
 # Logo
@@ -51,7 +50,6 @@ def main():
 
 ''')
         opcao = input("Escolha uma opção: ")
-
         if opcao == '1':
             limpar_tela()
             mostrar_cardapio()
@@ -81,7 +79,6 @@ def main():
             limpar_tela()
             print("Opção inválida. Tente novamente.\n")
 
-
 # Função para tela de ADMINISTRADOR
 def adm():
     limpar_tela()
@@ -93,53 +90,93 @@ def adm():
 -------------------------------------------------------
 | Opção |                  Descrição                  |
 -------------------------------------------------------
-|   1   |    Mostrar cardápio atual                   |
-|   2   |    Mostrar itens do menu atual              |
-|   3   |    Alterar um item do menu                  |
-|   4   |    Adicionar combo                          |
-|   5   |    Alterar combo                            |
-|   6   |    Remover combo existente                  |
-|   7   |    Alterar Usuário administrador            |
-|   8   |    Alterar Senha de administrador           |
-|   9   |    Sair                                     |
+|   1   |    Modificar cardápio de COMBOS             |
+|   2   |    Modificar cardápio de ITENS              |
+|   3   |    Alterar USUÁRIO administrador            |
+|   4   |    Alterar SENHA administrador              |
+|   5   |    Sair                                     |
 -------------------------------------------------------
 \n
 ''')
         opcao=input("ENTRE COM O NÚMERO DE UMA DAS OPÇÕES ACIMA: ")
         if opcao == "1":
-            mostrar_cardapio()
-            input("")
-            adm()
+            PainelCombo()
             return()
         elif opcao == "2":
-            exibir_itens()
-            input("Enter para voltar")
-            adm()
+            PainelItens()
             return()
         elif opcao == "3":
-            AltUnid()
-            return()
-        elif opcao == "4":
-            adicionar_ao_cardapio()
-            return()
-        elif opcao == "5":
-            alterar_do_Cardapio()
-            return()
-        elif opcao == "6":
-            remover_Combo_cardapio()
-            return()
-        elif opcao == "7":
             AltAdm()
             return()
-        elif opcao == "8":
+        elif opcao == "4":
             AltSenhaAdm()
             return()
-        elif opcao == "9":
+        elif opcao == "5":
             aut()
             return()
         else:
             limpar_tela()
             input("\nOpção inválida, tente novamente.")
+            
+def PainelCombo():
+    limpar_tela()
+    mostrar_cardapio()
+    print('''
+-------------------------------------------------------
+| Opção |                  Descrição                  |
+-------------------------------------------------------
+|   1   |    Adicionar combo ao cardápio              |
+|   2   |    Remover combo do cardápio                |
+|   3   |    Alterar combo do cardápio                |
+|   4   |    Voltar                                   |
+-------------------------------------------------------
+\n
+''')
+    opt=input("ENTRE COM O NÚMERO DE UMA DAS OPÇÕES ACIMA: ")
+    if opt == "1":
+        adicionar_ao_cardapio()
+        return ()
+    elif opt == "2":
+        remover_Combo_cardapio()
+        return ()
+    elif opt == "3":
+        alterar_do_Cardapio()
+        return ()
+    elif opt == "4":
+        return adm()
+        return ()
+            
+def PainelItens():            
+    limpar_tela()
+    exibir_itens()
+    print('''
+-------------------------------------------------------
+| Opção |                  Descrição                  |
+-------------------------------------------------------
+|   1   |    Adicionar ITEM ao menu                   |
+|   2   |    Remover ITEM do menu                     |
+|   3   |    Alterar ITEM do menu                     |
+|   4   |    Voltar                                   |
+-------------------------------------------------------
+\n
+''')
+    opt=input("ENTRE COM O NÚMERO DE UMA DAS OPÇÕES ACIMA: ")
+    if opt == "1":
+        AddItem()
+        return()
+    elif opt == "2":
+        RemItem()
+        return()
+    elif opt == "3":
+        AltUnid()
+        return()
+    elif opt == "4":
+        adm()
+        return()
+    else:
+        input("OPÇÃO INVÁLIDA. Pressione Enter para tentar novamente.")
+        adm()
+        return()
 
 # Função para autenticação
 def aut():
@@ -147,7 +184,7 @@ def aut():
     Logo()
     usuario = input('''
 BEM VINDO!
-Nome: ''')
+Nome (Entre "admin" para funções CRUD ou "fechar" para sair): ''')
     if usuario == "fechar":
         return()
     Login = LoadTxtL() # Carrega os dados dentro da função aut
@@ -155,7 +192,7 @@ Nome: ''')
         if usuario == valores[0]:
             senha = pwinput.pwinput(prompt='''
 ADMINISTRADOR (Digite FIM para sair)
-Senha: ''')
+Senha (1234): ''')
             if senha.lower() == "fim":
                 return aut()
             elif senha == valores[1]:
@@ -231,13 +268,15 @@ As alterações são salvas automaticamente no arquivo "main.txt".
     if opt.lower() == "fim":
         return adm()
     elif opt.isdigit() and int(opt) <= len(Alt): # filtro para a escolha ser dígito e estar na length no cardápio
-        alterar_item(list(Alt.keys())[int(opt) - 1], Alt) # carrega a outra função já com parmetros de lista, excluir primeira linha e variável Alt
+        alterar_item(list(Alt.keys())[int(opt) -1], Alt) # carrega a outra função já com parmetros de lista, excluir primeira linha e variável Alt
     else:
         input('\nOpção inválida, pressione Enter para tentar novamente.')
+        AltUnid()
+        return()
 
 def alterar_item(item, Alt):
     limpar_tela()
-    precoatt=float(Alt[item][1])
+    precoatt=Alt[item][1]
     print(f''' 
 {item}:
 --------------------------------------------
@@ -256,22 +295,92 @@ def alterar_item(item, Alt):
         Alt[item][0] = nome
     elif alteracao == "2":
         preco = input('''\nDigite o novo preço que gostaria de registrar
-(sem cifrão, apenas número e ponto)
+(sem cifrão, apenas número e virgula)
 Digite FIM para cancelar: ''')
         if preco.lower() == "fim":
             return AltUnid()
-        while not preco.isdigit():
+        while not preco.replace(",","").isdigit():
             preco = input('''\nPREÇO INVÁLIDO.
 Digite o novo preço que gostaria de registrar (sem cifrão, apenas número e ponto)
 Digite FIM para cancelar: ''')
             if preco.lower() == "fim":
                 return AltUnid()
-        Alt[item][1] = preco
+                return ()
+        precoatt = preco.replace(",",".")
+        Alt[item][1] = precoatt
+    else:
+        limpar_tela()
+        input("opção não encontrada. Pressione Enter para tentar novamente.")
+        alterar_item(item,Alt)
+        return ()
     SaveTxt(Alt)
     input("\nSalvo!")
     return AltUnid()
 
-#Carregar_cardapio
+# Função para adicionar item
+def AddItem():
+    Alt=LoadTxt()
+    exibir_itens()
+    opt=input("\nPressione Enter para adicionar um item a lista ou entre FIM para cancelar: ")
+    if opt.lower() == "fim":
+        return PainelItens()
+        return ()
+    limpar_tela()
+    exibir_itens()
+    nome=input("\nDigite o nome do novo item: ")
+    preco=input("Digite o preço do novo item, sem cifrão, apenas número s virgula: ")
+    while not preco.replace(",","").isdigit():
+        print("\nPREÇO INVÁLIDO, TENTE NOVAMENTE.")
+        preco=input("Digite o preço do novo item, sem cifrão, apenas número e virgula: ")
+    limpar_tela()
+    exibir_itens()
+    c=input(f'''
+
+DESEJA ADICIONAR ESSE ITEM NA LISTA?
+----------------------------
+{nome}  |  R${preco}                            
+----------------------------
+
+Pressione Enter para confirmar ou entre FIM para cancelar: ''')
+    if c.lower() == "fim":
+        return AddItem()
+        return ()
+    else:
+        precoatt = preco.replace(",",".")
+        AltAtt = {str(len(Alt) +1):[nome,precoatt]}
+        Alt.update(AltAtt)
+        SaveTxt(Alt)
+        input("\nSalvo!")
+        return PainelItens()
+        return ()
+ 
+# Remover Item 
+def RemItem():
+    Alt = LoadTxt()
+    limpar_tela()
+    exibir_itens()
+    opt = input("\nEntre com o número do que gostaria de deletar ou FIM para cancelar: ")
+    if opt.lower() == "fim":
+        return PainelItens()
+    elif opt.isdigit() and int(opt) <= len(Alt):
+        index = list(Alt.keys())[int(opt) -1]
+        print(f'''
+Deseja deletar o item:
+{index} | {Alt[index][0]} | R${FormatReal(Alt[index][1])}
+''')
+        c = input("Pressione Enter para confirmar ou entre FIM para cancelar: ")
+        if c.lower() == "fim":
+            return PainelItens()
+        else:
+            Alt.pop(opt)
+            SaveTxt(Alt)
+            input("\nSalvo!")
+            return PainelItens()
+    else:
+        input('\nOpção inválida, pressione Enter para tentar novamente.')
+        return RemItem()
+ 
+# Carregar_cardapio
 def carregar_cardapio():
     cardapio = {}
     with open("cardapio.txt", "r") as file:
@@ -294,66 +403,96 @@ def mostrar_cardapio():
 
 #Adicionar item ao cardapio
 def adicionar_ao_cardapio():
-    nome = input("Digite o nome do novo item: ")
-    lanche = input("Digite o nome do lanche: ")
-    acompanhamento = input("Digite o nome do acompanhamento: ")
-    copo = input("Digite o tamanho do copo: ")
-    preco = float(input("Digite o preço do item: "))
-    while not preco.isdigit():
-        preco = float(input("PREÇO INVÁLIDO, tente novamente: "))
+    limpar_tela()
+    mostrar_cardapio()
+    nome = input("\nDigite o nome do novo item: ")
+    lanche = input("Digite o tipo de recheio do lanche (ex: Carne): ")
+    acompanhamento = input("Digite o acompanhamento: ")
+    copo = input("Digite o tamanho do copo (ex: 200ml): ")
+    preco = input("Digite o preço do item sem cifrão, apenas número e virgula: ")
+    while not preco.replace(",","").isdigit():
+        preco = input("\nPREÇO INVÁLIDO, tente novamente: ")
+    limpar_tela()
+    mostrar_cardapio()
+    c=input(f'''
+Deseja adicionar o combo:
+| {nome},  {lanche},  {acompanhamento},  {copo},  R${preco} |
+ao cardápio de combos?
+
+Enter para confirmar ou entre FIM para cancelar: ''')
+    if c.lower() == "fim":
+        input("\nCancelado!")
+        PainelCombo()
+        return()
     with open("cardapio.txt", "a") as file:
+        precoatt = preco.replace(",",".")
         id = str(len(carregar_cardapio()) + 1)
-        file.write(f"{id},{nome},{lanche},{acompanhamento},{copo},{preco}\n")
-    print("Item adicionado ao cardápio!")
-    return adm()
+        file.write(f"{id},{nome},{lanche},{acompanhamento},{copo},{precoatt}\n")
+        input("\nItem adicionado ao cardápio!")
+    PainelCombo()
+    return()
 
 #Alterar combo do cardapio 
 def alterar_do_Cardapio():
+    limpar_tela()
     mostrar_cardapio()
     id = input("Digite o ID do item que deseja alterar: ")
     if id in carregar_cardapio():
         nome = input("Digite o novo nome do item: ")
-        lanche = input("Digite o novo nome do lanche: ")
-        acompanhamento = input("Digite o novo nome do acompanhamento: ")
-        copo = input("Digite o novo tamanho do copo: ")
-        preco = float(input("Digite o novo preço do item: "))
-        while not preco.isdigit():
-            preco = float(input("PREÇO INVÁLIDO. Digite o novo preço do item: "))
+        lanche = input("Digite o novo recheio do lanche (ex: Carne): ")
+        acompanhamento = input("Digite o novo acompanhamento: ")
+        copo = input("Digite o novo tamanho do copo (ex: 200ml): ")
+        preco = input("Digite o novo preço do item, sem cifrão, apenas números e virgula: ")
+        while not preco.replace(",","").isdigit():
+            preco = input('''
+PREÇO INVÁLIDO, TENTE NOVAMENTE.
+Digite o novo preço do item, sem cifrão, apenas números e virgula: ''')
+        precoatt=preco.replace(",",".")
         cardapio = carregar_cardapio()
-        cardapio[id] = {'Nome': nome, 'Lanche': lanche, 'Acompanhamento': acompanhamento, 'Copo': copo, 'Preço': preco}
+        cardapio[id] = {'Nome': nome, 'Lanche': lanche, 'Acompanhamento': acompanhamento, 'Copo': copo, 'Preço': precoatt}
         with open("cardapio.txt", "w") as file:
             for id, combo in cardapio.items():
                 file.write(f"{id},{combo['Nome']},{combo['Lanche']},{combo['Acompanhamento']},{combo['Copo']},{combo['Preço']}\n")
-        print("Item alterado com sucesso!")
+        input("Item alterado com sucesso!")
     else:
-        print("ID de item inválido!")
-    return adm()
+        input("ID de item inválido! Enter para tentar novamente.")
+        alterar_do_Cardapio()
+        return()
+    adm()
+    return()
 
 #Remover Combo do cardapio
 def remover_Combo_cardapio():
+    limpar_tela()
     mostrar_cardapio()
     id = input("Digite o ID do item que deseja remover: ")
     if id in carregar_cardapio():
-        opt= input(''' 
--------------------------------------------------------
-|   1   |    Deseja remover o combo: {id}             |
-|   2   |    Voltar ao menu                           |
--------------------------------------------------------
-''')
+        limpar_tela()
+        mostrar_cardapio()
+        opt= input(f''' 
+| OPÇÃO |
+------------------------------------
+|   1   |    Remover o combo: {id}                 
+|   2   |    Voltar ao menu                           
+------------------------------------
+Entre com a opção desejada: ''')
         if opt == "1":
             cardapio = carregar_cardapio()
             del cardapio[id]
             with open("cardapio.txt", "w") as file:
                 for id, combo in cardapio.items():
                     file.write(f"{id},{combo['Nome']},{combo['Lanche']},{combo['Acompanhamento']},{combo['Copo']},{combo['Preço']}\n")
-            print("Item removido com sucesso!")
+            input("\nItem removido com sucesso!")
         elif opt == "2":
-            print("Operação cancelada.")
+            input("Operação cancelada. Enter para voltar.")
         else:
             print("Opção inválida! Operação cancelada.")
     else:
-        print("ID de item inválido!")
-    return adm()
+        limpar_tela()
+        input("ID de item inválido! Tente novamente.")
+        return remover_Combo_cardapio()
+    PainelCombo()
+    return()
 
 
 # Função para pedir um combo do cardápio
@@ -533,19 +672,6 @@ def LoadTxtL(tipo='todos'):
         L1[i[0]]=[i[1],i[2]]
     return L1
 
-def LoadTxtC(tipo='todos'):
-    L0=[] # Lista que recebrá TXT
-    L1={} # DCT que receberá a lista
-    with open("login.txt",'r') as Dados:
-        for i in Dados:
-            if tipo == 'todos':
-                L0.append(i.strip().split(","))
-            elif tipo in i:
-                L0.append(i.strip().split(","))
-    for i in L0: # Tranforma lista em dicionario
-        L1[i[0]]=[i[1],i[2]]
-    return L1
-
 # Função para salvar TXT
 def SaveTxt(Dict):
     with open("main.txt", 'w') as Dados:
@@ -557,11 +683,6 @@ def SaveTxtL(Dict):
         for chave,dados in Dict.items():
             Dados.write(f"{chave},{dados[0]},{dados[1]}\n")
             
-def SaveTxtC(Dict):
-    with open("login.txt", 'w') as Dados:
-        for chave,dados in Dict.items():
-            Dados.write(f"{chave},{dados[0]},{dados[1]}\n")
-
 # Função para fornatar moeda
 def FormatReal(my_value):
     a = '{:,.2f}'.format(float(my_value))
